@@ -1,0 +1,34 @@
+---
+# task file
+- name: playbook
+  hosts: localhost
+  connection: local
+  vars:
+    title: Hellp World
+    version: 0.0.1
+    date: today
+    authors: G. Levavasseur
+    keywords: doc procedure
+
+  tasks:
+  - name: Test ping
+    ping:
+
+  - name: Copy test
+    copy:
+      src: files/procedure.md
+      dest: files/toto.md
+      owner: glipsl
+      group: staff
+      mode: 0640
+
+  - name: md generation
+    blockinfile:
+      dest: final.md
+      marker: "<!-- {mark} -->"
+      block: |
+        {{ lookup('template', 'template.j2') }}
+      create: yes
+      owner: glipsl
+      group: staff
+      mode: 0640
