@@ -11,7 +11,8 @@ IPSL's ESPRI-MOD team. These procedures apply to IPSL environement.
 The documentation is written in english.
 
 # ESGF
-## esgf-ansible.md
+[Ansible based ESGF procedure](/esgf-ansible.md)
 
 # ES-DOC
-## esdoc-errata.md
+[Errata service procedure](/esdoc-errata.md)
+![Image](https://es-doc.github.io/esdoc-errata-client/images/errata_service.png)
