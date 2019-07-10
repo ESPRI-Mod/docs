@@ -13,5 +13,5 @@ The documentation is written in english.
 # ESGF
 ## esgf-ansible.md
 
-#ES-DOC
+# ES-DOC
 ## esdoc-errata.md
