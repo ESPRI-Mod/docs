@@ -8,6 +8,8 @@ The objectives of ESPRI-MOD's activities are to manage, share, open up and promo
 You will find below the documented operational procedures of the services operated by the 
 IPSL's ESPRI-MOD team. These procedures apply to IPSL environement.
 
+The documentation is written in english.
+
 # ESGF
 ## esgf-ansible.md
 
