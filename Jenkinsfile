@@ -60,8 +60,8 @@ pipeline
     MKDOCS_SITE_DIR_PATH="${DOCS_DIR_PATH}/site"
 
     /*** SLACK ***/
-    SLACK_CHANNEL='#docs'
-    SLACK_CREDENTIAL_ID='slack_prodiguer_docs'
+    SLACK_CHANNEL='#tmp'
+    SLACK_CREDENTIAL_ID='slack_prodiguer_tmp'
     SLACK_MSG_PREFIX="ESPRI-MOD Docs <${env.BUILD_URL}|${env.BRANCH_NAME}#${env.BUILD_ID}>:"
 
     /*** GITHUB ***/
