@@ -21,4 +21,4 @@ pip install mkdocs mkdocs-extensions pymdown-extensions mkdocs-cinder
 
 ## Continuous Integration
 
-ESPRI-MOD's documentation is continuously built on git pushes.
+ESPRI-MOD's documentation is continuously built thank to ESGF-Jenkins.
