@@ -49,7 +49,7 @@ pipeline
   options
   {
     ansiColor('xterm') // Interprets color. Needs AnsiColor plugin.
-    timeout(time: 45, unit: 'MINUTES')
+    timeout(time: 5, unit: 'MINUTES')
     timestamps() // Add timestamp. Needs TimeStamp plugin.
   }
 
