@@ -18,3 +18,7 @@ The documentation is written in english.
 ```
 pip install mkdocs mkdocs-extensions pymdown-extensions mkdocs-cinder
 ```
+
+## Continuous Integration
+
+ESPRI-MOD's documentation is continuously built on git pushes.
