@@ -59,21 +59,21 @@ pipeline
     DOCS_DIR_PATH="${env.WORKSPACE}/mkdocs"
     MKDOCS_SITE_DIR_PATH="${DOCS_DIR_PATH}/site"
 
+    /*** GITHUB ***/
+    DOCS_REPO_URL='https://github.com/Prodiguer/docs.git'
+    BRANCH_NAME='master'
+
     /*** SLACK ***/
     SLACK_CHANNEL='#docs'
     SLACK_CREDENTIAL_ID='slack_prodiguer_docs'
-    SLACK_MSG_PREFIX="ESPRI-MOD Docs <${env.BUILD_URL}|${env.BRANCH_NAME}#${env.BUILD_ID}>:"
-
-    /*** GITHUB ***/
-    DOCS_REPO_URL='https://github.com/Prodiguer/docs.git'
+    SLACK_MSG_PREFIX="ESPRI-MOD Docs <${env.BUILD_URL}|${BRANCH_NAME}#${env.BUILD_ID}>:"
 
     /*** CONDA ***/
     CONDA_ENV_BIN_DIR_PATH='/home/jenkins/miniconda3/envs/mkdocs/bin'
 
     /*** CONSOL OUTPUT ***/
-    CONSOLE_MSG_PREFIX="commit on ${env.BRANCH_NAME}"
+    CONSOLE_MSG_PREFIX="commit on ${BRANCH_NAME}"
   }
-
 
   stages
   {
@@ -84,7 +84,7 @@ pipeline
         start_block('checkout')
 
         info('checkout docs repository')
-        git(url: DOCS_REPO_URL)
+        git(url: DOCS_REPO_URL, branch: BRANCH_NAME)
 
         end_block('checkout')
       }
@@ -113,7 +113,7 @@ pipeline
         {
           info('zip generated site')    
           sh'zip -r site.zip site'
-          archiveArtifacts artifacts: 'site.zip', onlyIfSuccessful: true
+          archiveArtifacts(artifacts: 'site.zip', onlyIfSuccessful: true)
         }
         end_block('deploy')
       }
