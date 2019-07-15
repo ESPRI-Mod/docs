@@ -5,7 +5,6 @@ nav:
   - ESGF: 
     - ESGF-Ansible:
       - ESGF-Ansible installation: esgf/ansible_installation.md
-      - Legacy Upgrade: esgf/ansible_legacy_upgrade.md
       - Upgrade : esgf/ansible_upgrade.md
   - ES-DOC:
     - Errata:
