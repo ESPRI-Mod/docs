@@ -16,7 +16,7 @@ The documentation is written in english.
 * Install mkdocs packages
 
 ```bash
-pip install mkdocs mkdocs-extensions pymdown-extensions mkdocs-cinder pygments
+pip install mkdocs mkdocs-extensions pymdown-extensions mkdocs-material pygments
 ```
 
 ## Continuous Integration
