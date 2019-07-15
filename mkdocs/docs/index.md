@@ -15,8 +15,8 @@ The documentation is written in english.
 * Install python 3.x (system, conda, etc.)
 * Install mkdocs packages
 
-```
-pip install mkdocs mkdocs-extensions pymdown-extensions mkdocs-cinder
+```bash
+pip install mkdocs mkdocs-extensions pymdown-extensions mkdocs-cinder pygments
 ```
 
 ## Continuous Integration
