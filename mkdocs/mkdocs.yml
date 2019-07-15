@@ -4,6 +4,7 @@ nav:
   - Home: index.md
   - ESGF: 
     - ESGF-Ansible:
+      - ESGF-Ansible installation: esgf/ansible_installation.md
       - Legacy Upgrade: esgf/ansible_legacy_upgrade.md
       - Upgrade : esgf/ansible_upgrade.md
   - ES-DOC:
@@ -21,13 +22,23 @@ nav:
     - Message Broker: hermes/mq.md
     - Web Site: hermes/web.md
 
-theme: cinder
+theme: 
+  name: material 
+  palette:
+    primary: 'Blue'
+    language: 'en'
+  feature:
+    tabs: true
 
 markdown_extensions:
-  - markdown.extensions.admonition
-  - markdown.extensions.footnotes
+  - codehilite:
+      guess_lang: false
+  - admonition
+  - footnotes
   - pymdownx.details
-  - markdown.extensions.codehilite :
-     guess_lang :  true 
+  - pymdownx.inlinehilite
+  - pymdownx.mark
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:pymdownx.emoji.to_svg
 
 use_directory_urls: false
