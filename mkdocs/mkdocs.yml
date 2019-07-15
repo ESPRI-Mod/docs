@@ -4,7 +4,7 @@ nav:
   - Home: index.md
   - ESGF: 
     - ESGF-Ansible:
-      - ESGF-Ansible installation: esgf/ansible_installation.md
+      - Installation: esgf/ansible_installation.md
       - Upgrade : esgf/ansible_upgrade.md
   - ES-DOC:
     - Errata:
