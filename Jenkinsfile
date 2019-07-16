@@ -35,8 +35,8 @@ pipeline
   {
     node
     {
-      // Execute this job only on Docker ready nodes.
-      label 'esgf-docker-slave'
+      // Execute this job only on mkdocs ready node.
+      label 'esgf-docker-slave-2'
 
       // Don't let Jenkins generate the workspace name: it is too long and
       // crashes the ESGF config generation stage.
@@ -114,6 +114,8 @@ pipeline
           info('zip generated site')    
           sh'zip -r site.zip site'
           archiveArtifacts(artifacts: 'site.zip', onlyIfSuccessful: true)
+          sh'rm -fr /var/html/mkdocs/site'
+          sh'cp -rp site /var/html/mkdocs'
         }
         end_block('deploy')
       }
