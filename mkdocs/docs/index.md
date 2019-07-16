@@ -10,15 +10,27 @@ IPSL's ESPRI-MOD team. These procedures apply to IPSL environement.
 
 The documentation is written in english.
 
-## How to install mkdocs environment
+## About Mkdocs
 
-* Install python 3.x (system, conda, etc.)
+### How to install Mkdocs environment
+
+* Install python 3.x and pip (system, conda, etc.)
 * Install mkdocs packages
 
 ```bash
 pip install mkdocs mkdocs-extensions pymdown-extensions mkdocs-material pygments
 ```
 
-## Continuous Integration
+### How to locally display your modifications
+
+* Open a shell and execute an embedded web server from the directory where mkdocs.yml stands:
+
+```
+mkdocs serve
+```
+
+* Open your favorite web browser at this address: [http://localhost:8000]()
+
+### Continuous Integration
 
 ESPRI-MOD's documentation is continuously built thank to ESGF-Jenkins.
