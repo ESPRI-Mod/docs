@@ -1,6 +1,6 @@
 # ES-DOC Errata Command line interface
 
-* Version: 1.1.2
+* Version: 0.0.1
 * Date: 16/07/2019
 * Authors: Atef Bennasser
 * Keywords: Errata, Datasets, CMIP6, ES-DOC, Command line, Client
