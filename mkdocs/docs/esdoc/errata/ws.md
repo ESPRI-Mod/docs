@@ -9,8 +9,8 @@
 
 The ES-DOC Errata Service supports the documentation of dataset publication errata.  Upon discovery of an erratum, a data node administrator navigates to the Errata front-end in order to document the erratum in detail.  Such documentation includes specifying the set of datasets affected by the erratum as well as associating the erratum with keywords such as project, experiment, model, variable ...etc.
 
-Software version: 0.6.4.0
-License:  CeCILL v2.1
+* Software version: 0.6.4.0
+* License:  CeCILL v2.1
 
 ## Hosts & access
 
@@ -56,8 +56,6 @@ PostGresql dB;
 PID service: RabbitMQ port … etc.
 
 ## Monitoring
-
-Usage stats
 
 
 
