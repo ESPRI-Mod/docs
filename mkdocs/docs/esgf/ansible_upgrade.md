@@ -8,7 +8,7 @@ ESGF-Ansible node upgrade
 
 ## Description
 
-!!! note ""
+!!! note
     This procedure describes how to upgrade ESGF-Ansible nodes from the version 4.0.2
 
 * ESGF-Ansible nodes version: 4.0.2 and higher
@@ -24,7 +24,7 @@ Any ESGF nodes (idp, index and data).
 
 ### Access
 
-!!! warning ""
+!!! warning
     This procedure assumes that you can establish ssh connexions (PKI) to your ESGF-Ansible nodes.
 
 * Protocol: ssh
@@ -49,7 +49,7 @@ For running ESGF-Ansible:
 
 ### Settings
 
-!!! note ""
+!!! note
     Custom and run these commands every time you execute the code of the procedure.
 
 ```bash
@@ -61,7 +61,7 @@ export PARENT_DIR="${HOME}" # The parent directory that contains ESGF-Ansible re
 
 #### Data node
 
-!!! note ""
+!!! note
     Run these commands according to the node that you want to upgrade.
 
 ```bash
