@@ -1,7 +1,7 @@
 ESGF-Ansible node upgrade
 =========================
 
-* Version: 0.0.1
+* Version: 0.0.2
 * Date: 15/07/2019
 * Authors: Sébastien Gardoll
 * Keywords: esgf ansible upgrade node
@@ -25,7 +25,7 @@ Any ESGF nodes (idp, index and data).
 ### Access
 
 !!! warning
-    This procedure assumes that you can establish ssh connexions (PKI) to your ESGF-Ansible nodes.
+    This procedure assumes that you can establish ssh connexions (PKI) to your ESGF 4.0.x nodes.
 
 * Protocol: ssh
 * Permission: superuser
@@ -35,7 +35,7 @@ Any ESGF nodes (idp, index and data).
 
 ### Requirements
 
-* An already deployed ESGF-Ansible node
+* An already deployed ESGF node 4.0.x or higher
 * An already deployed ESFG-Ansible repository (local or remote)
 
 ### Dependencies
@@ -62,7 +62,7 @@ export PARENT_DIR="${HOME}" # The parent directory that contains ESGF-Ansible re
 #### Data node
 
 !!! note
-    Run these commands according to the node that you want to upgrade.
+    Run these commands on esgf-watch-dog@esgf-monitoring.ipsl.upmc.fr, according to the node that you want to upgrade.
 
 ```bash
 # Stop the node: it depends on your ESGF-Ansible management deployement.
@@ -262,6 +262,12 @@ RedirectMatch ^/$ https://FQN/thredds/catalog/catalog.html
 RewriteCond %{QUERY_STRING} ^[^.]+$|\.(?!(nc|grib)$)([^.]+$)
 RewriteCond %{QUERY_STRING} ^dataset=.*\/(.*)$
 RewriteRule ^(.*)\/catalog\/(.*)\/catalog.html$ $1\/fileServer\/$2\/%1? [R,L]
+```
+
+### Login
+
+```bash
+ssh esgf-watch-dog@esgf-monitoring.ipsl.upmc.fr
 ```
 
 ### Deployment/Install

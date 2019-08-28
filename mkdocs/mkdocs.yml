@@ -3,6 +3,9 @@ site_name: ESPRI-MOD Documentation
 nav:
   - Home: index.md
   - ESGF: 
+    - ESGF administration:
+      - Machine Setup : esgf/machine_setup.md
+      - Certificates Management : esgf/cert_mgmt.md
     - ESGF-Ansible:
       - Installation: esgf/ansible_installation.md
       - Upgrade : esgf/ansible_upgrade.md
