@@ -23,6 +23,9 @@ nav:
     - Data Base: hermes/db.md
     - Message Broker: hermes/mq.md
     - Web Site: hermes/web.md
+  - WPS pour projet Copernicus:
+    - Installation: wps-copernicus/installation.md
+    - Docker: wps-copernicus/docker.md
 
 theme: 
   name: material 
