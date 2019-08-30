@@ -1,7 +1,7 @@
 ESGF-Ansible node upgrade
 =========================
 
-* Version: 0.0.2
+* Version: 0.0.3
 * Date: 15/07/2019
 * Authors: Sébastien Gardoll
 * Keywords: esgf ansible upgrade node
@@ -55,9 +55,20 @@ For running ESGF-Ansible:
 ```bash
 export GROUP='dev' # The group of idp/index and data nodes (e.g.: dev nodes).
 export PARENT_DIR="${HOME}" # The parent directory that contains ESGF-Ansible repository.
+export TAG_VERSION='4.0.4' # Checkout the new version of ESGF-Ansible to be upgraded to.
 ```
 
 ### Node preparation
+
+#### Stop the all nodes:
+
+Run the following command on the machine where the ESGF-Ansible repository lives.
+
+```bash
+# The above command is only available on 
+# esgf-watch-dog@esgf-monitoring.ipsl.upmc.fr (a VM at IPSL).
+esgf ${GROUP} stop # This stops idp, index and data nodes of the specified group.
+```
 
 #### Data node
 
@@ -65,11 +76,6 @@ export PARENT_DIR="${HOME}" # The parent directory that contains ESGF-Ansible re
     Run these commands on esgf-watch-dog@esgf-monitoring.ipsl.upmc.fr, according to the node that you want to upgrade.
 
 ```bash
-# Stop the node: it depends on your ESGF-Ansible management deployement.
-# The above command is only available on 
-# esgf-watch-dog@esgf-monitoring.ipsl.upmc.fr (a VM at IPSL).
-esgf ${GROUP}-data stop
-
 # Cleaning commands:
 rm -fr /tmp/esgf-config # Mandatory only for upgrade to version 4.0.3 .
 rm -fr /usr/local/src
@@ -93,11 +99,6 @@ cp -rp /esg/config /esg/config.bak
 #### Index/IDP node
 
 ```bash
-# Stop the node: it depends on your ESGF-Ansible management deployement.
-# The above command is only available on 
-# esgf-watch-dog@esgf-monitoring.ipsl.upmc.fr (a VM at IPSL).
-esgf ${GROUP}-index stop
-
 # Cleaning commands:
 rm -fr /tmp/esgf-config # Mandatory only for upgrade to version 4.0.3 .
 rm -fr /usr/local/src
@@ -122,6 +123,7 @@ Run these commands from the machine that holds your ESGF-Ansible repository.
 ```bash
 script ${PARENT_DIR}/esgf-ansible/upgrade.log # Keep a log of the upgrade.
 cd ${PARENT_DIR}/esgf-ansible
+git checkout ${TAG_VERSION}
 source activate ansible # See ESGF-Ansible installation.
 export ANSIBLE_NOCOLOR=true # Make the log readable.
 
@@ -139,7 +141,7 @@ Upgrading may revert some features of your node. Follow this procedure according
 
 Follow this procedure if the Apache web site configuration of your node has been reverted and lost the robots exclusion standard.
 
-* Create the robots.txt file (once for all)
+* Create the robots.txt file, **once for all**
 
 ```bash
 cat > "/var/www/html/robots.txt" <<EOF
@@ -173,7 +175,7 @@ The root page of a **data node** web site usually points to the generic 'unkown 
 
 * esgf-httpd-local.conf et esgf-httpd-local**s**.conf must exists in /etc/httpd/conf (see Annex).
 * Decomment the following lines:
-    - line 190 in /etc/httpd/conf/httpd.conf: `Include /etc/httpd/conf/esgf-httpd-local.conf`
+    - line 196 in /etc/httpd/conf/httpd.conf: `Include /etc/httpd/conf/esgf-httpd-local.conf`
     - line 33 in /etc/httpd/conf/httpd.**ssl**.conf: `Include /etc/httpd/conf/esgf-httpd-locals.conf`
 * Comment the lines 65 et 66 in /etc/httpd/conf/httpd.ssl.conf:
 
