@@ -90,7 +90,7 @@ cp -p /var/lib/pgsql/data/pg_hba.conf /var/lib/pgsql/data/pg_hba.conf.bak
 cp -rp /esg/config /esg/config.bak
 ```
 
-#### Index node
+#### Index/IDP node
 
 ```bash
 # Stop the node: it depends on your ESGF-Ansible management deployement.
