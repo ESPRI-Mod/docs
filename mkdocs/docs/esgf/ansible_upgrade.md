@@ -74,7 +74,7 @@ esgf ${GROUP}-data stop
 rm -fr /tmp/esgf-config # Mandatory only for upgrade to version 4.0.3 .
 rm -fr /usr/local/src
 rm -fr /etc/tempcerts
-rm /var/lib/pgsql/data/pg_hba.conf.bak
+rm -f /var/lib/pgsql/data/pg_hba.conf.bak
 rm -fr /esg/config.bak
 rm -fr /etc/certs.bak /etc/esgfcerts.bak /etc/grid-security.bak
 
