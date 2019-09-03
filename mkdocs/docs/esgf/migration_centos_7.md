@@ -48,10 +48,10 @@ tar -pcJvf solr-index.tar.xz -C /esg solr-index
 
 ```bash
 cd /root/migration_bakup
-pg_dump -U dbsuper --clean -Z 6 -v -F c esgcet > db_esgcet.bak
-pg_dump -U dbsuper --clean -Z 6 -v -F c cogdb > db_cogdb.bak
-pg_dump -U dbsuper --clean -Z 6 -v -F c slcsdb > db_slcsdb.bak
-pg_dump -U dbsuper --clean -Z 6 -v -F c postgres > db_postgres.bak
+pg_dump -U dbsuper --clean -Z 6 -v -F c esgcet > db_esgcet.bak 2> db_esgcet.log
+pg_dump -U dbsuper --clean -Z 6 -v -F c cogdb > db_cogdb.bak 2> db_cogdb.log
+pg_dump -U dbsuper --clean -Z 6 -v -F c slcsdb > db_slcsdb.bak 2>db_slcsdb.log
+pg_dump -U dbsuper --clean -Z 6 -v -F c postgres > db_postgres.bak 2>db_postgres.log
 ```
 
 ### 3. Backup data-old (destination is the data-new)
@@ -80,8 +80,8 @@ tar -pcJvf thredds.tar.xz -C /esg/content thredds
 ```bash
 mkdir -p /root/migration_bakup
 cd /root/migration_bakup
-pg_dump -U dbsuper --clean -Z 6 -v -F c esgcet > db_esgcet.bak
-pg_dump -U dbsuper --clean -Z 6 -v -F c postgres > db_postgres.bak
+pg_dump -U dbsuper --clean -Z 6 -v -F c esgcet > db_esgcet.bak 2> db_esgcet.log
+pg_dump -U dbsuper --clean -Z 6 -v -F c postgres > db_postgres.bak 2>db_postgres.log
 ```
 
 ### 4. Shutdown the VM old
