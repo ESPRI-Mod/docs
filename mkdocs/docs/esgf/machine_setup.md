@@ -4,7 +4,7 @@ Machine Setup
 * Version: 0.0.1
 * Date: 28/08/2019
 * Authors: Sébastien Gardoll
-* Keywords: setup centos yum security
+* Keywords: setup centos yum security esgf
 
 ## Description
 
