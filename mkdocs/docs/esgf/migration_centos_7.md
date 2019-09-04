@@ -191,7 +191,7 @@ pg_restore --clean -U dbsuper -d slcsdb -v -F c db_slcsdb.bak 2>db_slcsdb_injec.
 
 * Modify /root/.bashrc according to /root/migration_backup/.bashrc
 
-### 8. Test Solr indexes for **index-new**
+### 8. Test Solr indices for **index-new**
 
 ### 9. Install the data for **data-new**
 
