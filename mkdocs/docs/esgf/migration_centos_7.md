@@ -4,33 +4,35 @@ MIGRATION FROM CENTOS 6 to 7
 * Version: 0.0.1
 * Date: 03/09/2019
 * Authors: Sébastien Gardoll
-* Keywords: migration centos backup esgf
+* Keywords: migration centos backup esgf index data node
 
 ## Description
 
 This procedure describes how to migrate a ESGF node 4.0.4 from CentOS 6 to CentOS 7.
 
-Term definitions:
+Some definitions:
 
 index-old: index node before migrating (under CentOS 6)
+
 data-old: data node before migrating (under CentOS 6)
 
 index-new: index node after migrating (under CentOS 7)
+
 data-new: data node after migrating (under CentOS 7)
 
 ## Procedure
 
-### 1. Create the vm new with temporary host name
+### 1. Create the *-new VMs with temporary host name
 
-### 2. Backup index-old (destination is the index-new)
+### 2. Backup **index-old** (destination is the index-new)
 
 * Tar balls
 
 ```bash
-mkdir /root/migration_bakup
-cd /root/migration_bakup
-tar -pcJvf esgf_config.tar.xz -C /esg config
-tar -pcJvf home.tar.xz -C / home
+mkdir /root/migration_backup
+cd /root/migration_backup
+tar -pcJf esgf_config.tar.xz -C /esg config
+tar -pcJf home.tar.xz -C / home
 cp -p /root/.bashrc .
 cp -p /root/.pgpass .
 mkdir certs
@@ -38,65 +40,196 @@ cp -rp /etc/certs certs
 cp -rp /etc/esgfcerts certs
 cp -rp /etc/grid-security certs
 cp -rp /var/lib/globus/simple_ca certs
-tar -pcJvf certs.tar.xz certs
+tar -pcJf - certs | openssl enc -e -aes256 -out certs.tar.xz.enc # Provide a password.
 rm -fr certs
-tar -pcJvf cog.tar.xz -C /usr/local cog
-tar -pcJvf solr-index.tar.xz -C /esg solr-index
+tar -pcJf cog.tar.xz -C /usr/local cog
+tar -pcJf solr-index.tar.xz -C /esg solr-index
 ```
 
 * PostgreSQL
 
 ```bash
-cd /root/migration_bakup
-pg_dump -U dbsuper --clean -Z 6 -v -F c esgcet > db_esgcet.bak 2> db_esgcet.log
-pg_dump -U dbsuper --clean -Z 6 -v -F c cogdb > db_cogdb.bak 2> db_cogdb.log
-pg_dump -U dbsuper --clean -Z 6 -v -F c slcsdb > db_slcsdb.bak 2>db_slcsdb.log
-pg_dump -U dbsuper --clean -Z 6 -v -F c postgres > db_postgres.bak 2>db_postgres.log
+cd /root/migration_backup
+pg_dump -U dbsuper --clean -Z 6 -v -F c esgcet > db_esgcet.bak 2> db_esgcet_backup.log || echo '***** ERROR *****'
+pg_dump -U dbsuper --clean -Z 6 -v -F c cogdb > db_cogdb.bak 2> db_cogdb_backup.log || echo '***** ERROR *****'
+pg_dump -U dbsuper --clean -Z 6 -v -F c slcsdb > db_slcsdb.bak 2>db_slcsdb_backup.log || echo '***** ERROR *****'
+pg_dump -U dbsuper --clean -Z 6 -v -F c postgres > db_postgres.bak 2>db_postgres_backup.log || echo '***** ERROR *****'
 ```
 
-### 3. Backup data-old (destination is the data-new)
+* Transfert
+
+```bash
+HOST_DEST='TO_BE_SET'
+ssh "root@${HOST_DEST}" 'mkdir /root/migration_backup'
+ssh "root@${HOST_DEST}" 'chmod go= /root/migration_backup'
+scp /root/migration_backup/* "root@{HOST_DEST}:/root/migration_backup"
+```
+
+### 3. Backup **data-old** (destination is the data-new)
 
 
 * Tar balls
 
 ```bash
-mkdir -p /root/migration_bakup
-cd /root/migration_bakup
-tar -pcJvf esgf_config.tar.xz -C /esg config
-tar -pcJvf home.tar.xz -C / home
+mkdir -p /root/migration_backup
+cd /root/migration_backup
+tar -pcJf esgf_config.tar.xz -C /esg config
+tar -pcJf home.tar.xz -C / home
 cp -p /root/.bashrc .
 cp -p /root/.pgpass .
 mkdir certs
 cp -rp /etc/certs certs
 cp -rp /etc/esgfcerts certs
 cp -rp /etc/grid-security certs
-tar -pcJvf certs.tar.xz certs
+tar -pcJf - certs | openssl enc -e -aes256 -out certs.tar.xz.enc # Provide a password.
 rm -fr certs
-tar -pcJvf thredds.tar.xz -C /esg/content thredds
+tar -pcJf thredds.tar.xz -C /esg/content thredds
 ```
 
 * PostgreSQL
 
 ```bash
-mkdir -p /root/migration_bakup
-cd /root/migration_bakup
-pg_dump -U dbsuper --clean -Z 6 -v -F c esgcet > db_esgcet.bak 2> db_esgcet.log
-pg_dump -U dbsuper --clean -Z 6 -v -F c postgres > db_postgres.bak 2>db_postgres.log
+mkdir -p /root/migration_backup
+cd /root/migration_backup
+pg_dump -U dbsuper --clean -Z 6 -v -F c esgcet > db_esgcet.bak 2> db_esgcet_backup.log || echo '***** ERROR *****'
+pg_dump -U dbsuper --clean -Z 6 -v -F c postgres > db_postgres.bak 2>db_postgres_backup.log || echo '***** ERROR *****'
 ```
 
-### 4. Shutdown the VM old
+* Transfert
 
-### 5. Rename the host name of the VM new
+```bash
+HOST_DEST='TO_BE_SET'
+ssh "root@${HOST_DEST}" 'mkdir /root/migration_backup'
+ssh "root@${HOST_DEST}" 'chmod go= /root/migration_backup'
+scp /root/migration_backup/* "root@{HOST_DEST}:/root/migration_backup"
+```
 
-### 6. Install from scratch ESGF 4.0.4 on the VM new
+### 4. Shutdown the *-old VMs
 
-### 7. Install the data for the index-new
+### 5. Rename the host name of the *-new VMs
 
-### 8. Install the data for the data-new
+### 6. Install from scratch ESGF 4.0.4 on the *-new VMs
 
-### 9. Try install Solr indexes for index-new
+#### Pre installation
 
-### 10. Configure the iptables for data-new
+* Set the same passwords
+
+```bash
+tar -C /root/migration_backup -xapf /root/migration_backup/esgf_config.tar.xz
+mkdir -p /esg/config
+cp -p /root/migration_backup/config/.esgf_pass 
+```
+
+* Certs
+
+On *-new VMs (both !)
+
+```bash
+openssl enc -d -aes256 -in /root/migration_backup/certs.tar.xz.enc | tar -C /root/migration_backup -xap # Provide a password.
+```
+
+#### Installation setup
+
+- Set the host_var files so as to pick up the certificate files.
+  => replace the prefix of the path by: /root/migration_backup/certs
+
+#### Post installation
+
+- Configuration of authorization and policies (Guillaume)
+
+- Some commands:
+
+```bash
+chown root:tomcat /esg/config/.esgf_pass
+rm -fr /root/migration_backup/certs
+```
+
+### 7. Install the data for **index-new**
+
+* Shutdown ESGF node on index-new
+
+* Simple files
+
+```bash
+mv /root/migration_backup/.pgpass /root
+chmod go= /root/.pgpass
+```
+
+* Cog
+
+```bash
+mkdir -p /root/fresh_install_backup
+mv /usr/local/cog /root/fresh_install_backup && tar -C /usr/local -xapf /root/migration_backup/cog.tar.xz
+```
+
+* Solr
+
+```bash
+mkdir -p /root/fresh_install_backup
+mv /esg/solr-index /root/fresh_install_backup && tar -C /esg -xapf /root/migration_backup/solr-index.tar.xz
+```
+
+* PostgreSQL
+
+Backup the fresly installed db's
+```bash
+mkdir -p /root/fresh_install_backup
+cd /root/fresh_install_backup
+pg_dump -U dbsuper --clean -Z 6 -v -F c esgcet > db_esgcet.bak 2> db_esgcet_backup.log || echo '***** ERROR *****'
+pg_dump -U dbsuper --clean -Z 6 -v -F c cogdb > db_cogdb.bak 2> db_cogdb_backup.log || echo '***** ERROR *****'
+pg_dump -U dbsuper --clean -Z 6 -v -F c slcsdb > db_slcsdb.bak 2>db_slcsdb_backup.log || echo '***** ERROR *****'
+pg_dump -U dbsuper --clean -Z 6 -v -F c postgres > db_postgres.bak 2>db_postgres_backup.log || echo '***** ERROR *****'
+```
+
+Inject the data from index-old
+```bash
+cd /root/migration_backup
+pg_restore --clean -U dbsuper -d esgcet -v -F c db_esgcet.bak 2>db_esgcet_injec.log || echo '***** ERROR *****'
+pg_restore --clean -U dbsuper -d cogdb  -v -F c db_cogdb.bak 2>db_cogdb_injec.log || echo '***** ERROR *****'
+pg_restore --clean -U dbsuper -d slcsdb -v -F c db_slcsdb.bak 2>db_slcsdb_injec.log || echo '***** ERROR *****'
+```
+
+* Modify /root/.bashrc according to /root/migration_backup/.bashrc
+
+### 8. Test Solr indexes for **index-new**
+
+### 9. Install the data for **data-new**
+
+* Shutdown ESGF node on data-new
+
+* Simple files
+
+```bash
+mv /root/migration_backup/.pgpass /root
+chmod go= /root/.pgpass
+```
+
+* PostgreSQL
+
+Backup the fresly installed db's
+```bash
+mkdir -p /root/fresh_install_backup
+cd /root/fresh_install_backup
+pg_dump -U dbsuper --clean -Z 6 -v -F c esgcet > db_esgcet.bak 2> db_esgcet_backup.log || echo '***** ERROR *****'
+pg_dump -U dbsuper --clean -Z 6 -v -F c postgres > db_postgres.bak 2>db_postgres_backup.log || echo '***** ERROR *****'
+```
+
+Inject the data from data-old
+```bash
+cd /root/migration_backup
+pg_restore --clean -U dbsuper -d esgcet -v -F c db_esgcet.bak 2>db_esgcet_injec.log || echo '***** ERROR *****'
+```
+
+* Thredds
+
+```bash
+mkdir -p /root/fresh_install_backup
+mv /esg/content/thredds /root/fresh_install_backup && tar -C /esg/content -xapf /root/migration_backup/thredds.tar.xz
+```
+
+* Modify /root/.bashrc according to /root/migration_backup/.bashrc
+
+### 10. Configure the iptables for **data-new**
 
 ```bash
 systemctl stop firewalld
@@ -133,3 +266,87 @@ service iptables save
 ```
 
 ### 11. Cron scripts
+
+Root's crontab on index-old:
+```
+# ESGF cronjob BEGIN ###
+35 0,12 * * * ESG_USAGE_PARSER_CONF=/esg/config/gridftp/esg-bdm-usage-gridftp.conf /esg/tools/esg_usage_parser 
+5 0,12 * * * ESG_USAGE_PARSER_CONF=/esg/config/gridftp/esg-server-usage-gridftp.conf /esg/tools/esg_usage_parser 
+# ESGF cronjob END ###
+```
+
+Root's crontab on data-old:
+
+```
+0 */2 * * * /root/dashboard/scripts/check_stats.sh
+#Ansible: Run esg_usage_parser
+5 0,12 * * * ESG_USAGE_PARSER_CONF=/usr/local/esg-usage-parser/esg_usage_parser.conf /usr/local/esg-usage-parser/src/esg_usage_parser
+0 * * * * /root/dashboard/scripts/check_injection.sh 2>&1 | tee -a /root/dashboard/check.log | /usr/bin/logger -t '[CHECK_INJECTION]'
+*/30 * * * * top -b -n1 >> /root/dashboard/top.log
+```
+
+#### Reinstallation of the monitoring scripts on **data-new**
+
+* Scripts repository installation
+
+```bash
+yum -y install subversion.x86_64
+cd /root
+svn co svn+ssh://sgardoll@forge.ipsl.jussieu.fr/ipsl/forge/projets/prodiguer/svn/esgf_admin_tools/trunk/scripts
+mkdir -p /root/stats
+```
+
+* Stats injection reminder
+
+This script sends an email when the number of unprocessed entries in the dashboard queue is below 50. The purpose of this reminder is to warm the node admin so as to inject stats.
+
+Just add the following line in the root's crontab:
+
+```
+0 */2 * * * /root/scripts/check_stats.sh
+```
+
+Then configure the postfix so as to enable sending email (see machine setup procedure).
+
+* Dashboard processing report
+
+This script reports some stats about the activity of the ESGF dashboard, like the
+number of dashboard queue entries that are processed or not.
+
+Just add the following line to the root's crontab.
+
+```
+0 * * * * /root/scripts/check_injection.sh 2>&1 | tee -a /root/stats/check_injection.log | /usr/bin/logger -t '[CHECK_INJECTION]'
+```
+
+* System activity logger
+
+This cron instruction periodically logs the output of the command top so as to
+monitor the activity of the processes of the dashboard. Add this instruction to the root's crontab.
+
+```
+*/30 * * * * top -b -n1 >> /root/stats/top.log
+```
+
+* Stats script (dashboard substitute) 
+
+Install miniconda and specify that ** you don't want to modify the bashrc file** (that interfers with ESGF-Ansible) ! 
+
+```bash
+curl -o Miniconda2-latest-Linux-x86_64.sh https://repo.anaconda.com/miniconda/Miniconda2-latest-Linux-x86_64.sh
+chmod +x Miniconda2-latest-Linux-x86_64.sh
+./Miniconda2-latest-Linux-x86_64.sh
+# Wait until the end of the installation.
+rm Miniconda2-latest-Linux-x86_64.sh
+/root/miniconda2/bin/conda create -n sandbox python=3.6
+# Wait until the end of the creation of the environment.
+/root/miniconda2/bin/conda install -n sandbox psycopg2 sqlalchemy pyyaml
+```
+
+Copy /root/stats/esgf_stats.log from vesgdev-data to /root/stats
+
+Then add the following line in the root's crontab:
+
+```
+0,30 * * * *   /root/miniconda2/envs/sandbox/bin/python /root/scripts/esgf_stats.py 2>&1 |/usr/bin/logger -t '[STATS]'
+```
