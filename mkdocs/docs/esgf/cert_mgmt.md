@@ -4,7 +4,7 @@ Certificates Management
 * Version: 0.0.1
 * Date: 28/08/2019
 * Authors: Sébastien Gardoll
-* Keywords: certificate installation ssl ca myproxy globus apache
+* Keywords: certificate installation ssl ca myproxy globus apache esgf
 
 ## Description
 

@@ -4,7 +4,7 @@ Machine Setup
 * Version: 0.0.1
 * Date: 28/08/2019
 * Authors: Sébastien Gardoll
-* Keywords: setup centos yum security
+* Keywords: setup centos yum security esgf
 
 ## Description
 
@@ -45,6 +45,21 @@ and set `installonly_limit=2`.
 
 Also, comment the following instruction if it exists: `#exclude=kernel*`, so as
 to update the kernel.
+
+* Postfix configuration (optional)
+
+Enable sending email from the host for any script.
+
+Add the following instructions at the end of /etc/postfix/main.cf (replace the
+highlighted word in capital letters):
+
+``` hl_lines="1"
+myhostname = FULL_QUALIFIED_NAME_OF_THE_HOST
+myorigin = $mydomain
+relayhost = zproxy.ipsl.fr
+inet_interfaces = loopback-only
+mydestination =
+```
 
 * Bashrc
 
