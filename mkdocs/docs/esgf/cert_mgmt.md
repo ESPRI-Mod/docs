@@ -58,7 +58,7 @@ Follow the procedure describes in ESGF-Ansible wiki at this [page](https://esgf.
 * Certificate request
 
 !!! note
-    The following instructions should or are more less automatized in ESGF-Ansible. In the futur, these instructions may be obsolete.
+    All the following instructions should be, or are, automated thanks to ESGF-Ansible. Hence, they may become obsolete in the future.
 
 !!! warning
     The following instructions are not tested.
@@ -104,5 +104,5 @@ ssh esgf-watch-dog@esgf-monitoring.ipsl.upmc.fr
 
 ### Monitoring
 
-Certificate validity and alert are managed in Nagios. Ask to the IPSL's support for
+Certificates’ validity and alerts are managed in nagios. Ask to the IPSL's support for
 running SSL certificate validity check on the machines.
