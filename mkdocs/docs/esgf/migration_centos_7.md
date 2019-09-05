@@ -24,17 +24,21 @@ data-new: data node after migrating (under CentOS 7)
 
 ### 1. Create the *-new VMs with temporary host name
 
-### 2. Backup **index-old** (destination is the index-new)
+### 2. Shutdown the *-new VMs
+
+### 3. Rename the host name of the *-old VMs
+
+### 4. Boot the *-new VMs and rename their host name
+
+### 5. Backup **index-old** (destination is the index-new)
 
 * Tar balls
 
 ```bash
+HOST_DEST='esgf-node.ipsl.upmc.fr'
 mkdir /root/migration_backup
 cd /root/migration_backup
 tar -pcJf esgf_config.tar.xz -C /esg config
-tar -pcJf home.tar.xz -C / home
-cp -p /root/.bashrc .
-cp -p /root/.pgpass .
 mkdir certs
 cp -rp /etc/certs certs
 cp -rp /etc/esgfcerts certs
@@ -42,6 +46,14 @@ cp -rp /etc/grid-security certs
 cp -rp /var/lib/globus/simple_ca certs
 tar -pcJf - certs | openssl enc -e -aes256 -out certs.tar.xz.enc # Provide a password.
 rm -fr certs
+
+ssh "root@${HOST_DEST}" 'mkdir /root/pre_migration_backup'
+ssh "root@${HOST_DEST}" 'chmod go= /root/pre_migration_backup'
+scp /root/migration_backup/* "root@{HOST_DEST}:/root/pre_migration_backup"
+
+tar -pcJf home.tar.xz -C / home
+cp -p /root/.bashrc .
+cp -p /root/.pgpass .
 tar -pcJf cog.tar.xz -C /usr/local cog
 tar -pcJf solr-index.tar.xz -C /esg solr-index
 ```
@@ -59,7 +71,7 @@ pg_dump -U dbsuper --clean -Z 6 -v -F c postgres > db_postgres.bak 2>db_postgres
 * Transfert
 
 ```bash
-HOST_DEST='TO_BE_SET'
+HOST_DEST='esgf-node.ipsl.upmc.fr'
 ssh "root@${HOST_DEST}" 'mkdir /root/migration_backup'
 ssh "root@${HOST_DEST}" 'chmod go= /root/migration_backup'
 scp /root/migration_backup/* "root@{HOST_DEST}:/root/migration_backup"
@@ -67,22 +79,27 @@ scp /root/migration_backup/* "root@{HOST_DEST}:/root/migration_backup"
 
 ### 3. Backup **data-old** (destination is the data-new)
 
-
 * Tar balls
 
 ```bash
+HOST_DEST='vesg.ipsl.upmc.fr'
 mkdir -p /root/migration_backup
 cd /root/migration_backup
 tar -pcJf esgf_config.tar.xz -C /esg config
-tar -pcJf home.tar.xz -C / home
-cp -p /root/.bashrc .
-cp -p /root/.pgpass .
 mkdir certs
 cp -rp /etc/certs certs
 cp -rp /etc/esgfcerts certs
 cp -rp /etc/grid-security certs
 tar -pcJf - certs | openssl enc -e -aes256 -out certs.tar.xz.enc # Provide a password.
 rm -fr certs
+
+ssh "root@${HOST_DEST}" 'mkdir /root/pre_migration_backup'
+ssh "root@${HOST_DEST}" 'chmod go= /root/pre_migration_backup'
+scp /root/migration_backup/* "root@{HOST_DEST}:/root/pre_migration_backup"
+
+tar -pcJf home.tar.xz -C / home
+cp -p /root/.bashrc .
+cp -p /root/.pgpass .
 tar -pcJf thredds.tar.xz -C /esg/content thredds
 ```
 
@@ -98,15 +115,11 @@ pg_dump -U dbsuper --clean -Z 6 -v -F c postgres > db_postgres.bak 2>db_postgres
 * Transfert
 
 ```bash
-HOST_DEST='TO_BE_SET'
+HOST_DEST='vesg.ipsl.upmc.fr'
 ssh "root@${HOST_DEST}" 'mkdir /root/migration_backup'
 ssh "root@${HOST_DEST}" 'chmod go= /root/migration_backup'
 scp /root/migration_backup/* "root@{HOST_DEST}:/root/migration_backup"
 ```
-
-### 4. Shutdown the *-old VMs
-
-### 5. Rename the host name of the *-new VMs
 
 ### 6. Install from scratch ESGF 4.0.4 on the *-new VMs
 
@@ -115,9 +128,9 @@ scp /root/migration_backup/* "root@{HOST_DEST}:/root/migration_backup"
 * Set the same passwords
 
 ```bash
-tar -C /root/migration_backup -xapf /root/migration_backup/esgf_config.tar.xz
+tar -C /root/pre_migration_backup -xapf /root/pre_migration_backup/esgf_config.tar.xz
 mkdir -p /esg/config
-cp -p /root/migration_backup/config/.esgf_pass 
+cp -p /root/pre_migration_backup/config/.esgf_pass 
 ```
 
 * Certs
@@ -125,13 +138,25 @@ cp -p /root/migration_backup/config/.esgf_pass
 On *-new VMs (both !)
 
 ```bash
-openssl enc -d -aes256 -in /root/migration_backup/certs.tar.xz.enc | tar -C /root/migration_backup -xap # Provide a password.
+openssl enc -d -aes256 -in /root/pre_migration_backup/certs.tar.xz.enc | tar -C /root/pre_migration_backup -xap # Provide a password.
 ```
 
 #### Installation setup
 
 - Set the host_var files so as to pick up the certificate files.
   => replace the prefix of the path by: /root/migration_backup/certs
+
+- On esgf-watch-dog@esgf-monitoring:
+
+```bash
+script install.log
+cd /home/esgf-watch-dog/esgf-ansible
+git checkout 4.0.4
+git status
+source activate ansible
+export ANSIBLE_NOCOLOR=true
+ansible-playbook -i hosts.prod -u root --skip-tags gridftp install.yml
+```
 
 #### Post installation
 
@@ -142,7 +167,10 @@ openssl enc -d -aes256 -in /root/migration_backup/certs.tar.xz.enc | tar -C /roo
 ```bash
 chown root:tomcat /esg/config/.esgf_pass
 rm -fr /root/migration_backup/certs
+rm -fr /root/pre_migration_backup/certs
 ```
+
+- follow the post installation section of the upgrade procedure.
 
 ### 7. Install the data for **index-new**
 
