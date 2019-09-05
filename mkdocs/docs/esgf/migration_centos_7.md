@@ -77,7 +77,7 @@ ssh "root@${HOST_DEST}" 'chmod go= /root/migration_backup'
 scp /root/migration_backup/* "root@{HOST_DEST}:/root/migration_backup"
 ```
 
-### 3. Backup **data-old** (destination is the data-new)
+### 6. Backup **data-old** (destination is the data-new)
 
 * Tar balls
 
@@ -121,7 +121,7 @@ ssh "root@${HOST_DEST}" 'chmod go= /root/migration_backup'
 scp /root/migration_backup/* "root@{HOST_DEST}:/root/migration_backup"
 ```
 
-### 6. Install from scratch ESGF 4.0.4 on the *-new VMs
+### 7. Install from scratch ESGF 4.0.4 on the *-new VMs
 
 #### Pre installation
 
@@ -172,7 +172,7 @@ rm -fr /root/pre_migration_backup/certs
 
 - follow the post installation section of the upgrade procedure.
 
-### 7. Install the data for **index-new**
+### 8. Install the data for **index-new**
 
 * Shutdown ESGF node on index-new
 
@@ -219,9 +219,9 @@ pg_restore --clean -U dbsuper -d slcsdb -v -F c db_slcsdb.bak 2>db_slcsdb_injec.
 
 * Modify /root/.bashrc according to /root/migration_backup/.bashrc
 
-### 8. Test Solr indices for **index-new**
+### 9. Test Solr indices for **index-new**
 
-### 9. Install the data for **data-new**
+### 10. Install the data for **data-new**
 
 * Shutdown ESGF node on data-new
 
@@ -257,7 +257,7 @@ mv /esg/content/thredds /root/fresh_install_backup && tar -C /esg/content -xapf 
 
 * Modify /root/.bashrc according to /root/migration_backup/.bashrc
 
-### 10. Configure the iptables for **data-new**
+### 11. Configure the iptables for **data-new**
 
 ```bash
 systemctl stop firewalld
@@ -293,7 +293,7 @@ iptables -A INPUT -i eth0 -m state --state NEW -s 207.46.13.0/24 -j REJECT --rej
 service iptables save
 ```
 
-### 11. Cron scripts
+### 12. Cron scripts
 
 Root's crontab on index-old:
 ```
