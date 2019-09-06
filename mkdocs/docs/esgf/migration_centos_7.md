@@ -1,7 +1,7 @@
 MIGRATION FROM CENTOS 6 to 7
 ============================
 
-* Version: 0.0.3
+* Version: 0.0.4
 * Date: 03/09/2019
 * Authors: Sébastien Gardoll, Pierre Logerais
 * Keywords: migration centos backup esgf index data node
@@ -229,6 +229,7 @@ rm -fr /root/pre_migration_backup
 
 ```bash
 mv /root/migration_backup/.pgpass /root
+chown root:root /root/.pgpass
 chmod go= /root/.pgpass
 ```
 
@@ -237,6 +238,8 @@ chmod go= /root/.pgpass
 ```bash
 mkdir -p /root/fresh_install_backup
 mv /usr/local/cog /root/fresh_install_backup && tar -C /usr/local -xapf /root/migration_backup/cog.tar.xz
+chown -R apache:apache /usr/local/cog
+chmod -R o= /usr/local/cog
 ```
 
 * Solr indices
@@ -244,6 +247,8 @@ mv /usr/local/cog /root/fresh_install_backup && tar -C /usr/local -xapf /root/mi
 ```bash
 mkdir -p /root/fresh_install_backup
 mv /esg/solr-index /root/fresh_install_backup && tar -C /esg -xapf /root/migration_backup/solr-index.tar.xz
+chown -R solr:solr /esg/solr-index
+chmod -R o= /esg/solr-index
 ```
 
 * PostgreSQL
@@ -279,6 +284,7 @@ pg_restore --clean -U dbsuper -d slcsdb -v -F c db_slcsdb.bak 2>db_slcsdb_injec.
 ```bash
 mv /root/migration_backup/.pgpass /root
 chmod go= /root/.pgpass
+chown root:root /root/.pgpass
 ```
 
 * PostgreSQL
@@ -302,6 +308,8 @@ pg_restore --clean -U dbsuper -d esgcet -v -F c db_esgcet.bak 2>db_esgcet_injec.
 ```bash
 mkdir -p /root/fresh_install_backup
 mv /esg/content/thredds /root/fresh_install_backup && tar -C /esg/content -xapf /root/migration_backup/thredds.tar.xz
+chown -R tomcat:tomcat /esg/content/thredds
+chmod -R o= /esg/content/thredds
 ```
 
 * Modify /root/.bashrc according to /root/migration_backup/.bashrc
@@ -436,4 +444,5 @@ On *-new:
 
 ```bash
 rm -fr /root/migration_backup
+chmod -R go= /root/*
 ```
