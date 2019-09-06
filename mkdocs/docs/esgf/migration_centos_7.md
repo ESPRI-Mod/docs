@@ -1,7 +1,7 @@
 MIGRATION FROM CENTOS 6 to 7
 ============================
 
-* Version: 0.0.2
+* Version: 0.0.3
 * Date: 03/09/2019
 * Authors: Sébastien Gardoll, Pierre Logerais
 * Keywords: migration centos backup esgf index data node
@@ -54,7 +54,21 @@ scp /root/migration_backup/* "root@{HOST_DEST}:/root/pre_migration_backup"
 tar -pcJf home.tar.xz -C / home
 cp -p /root/.bashrc .
 cp -p /root/.pgpass .
+```
+
+* Cog
+
+```bash
+mkdir /root/migration_backup
+cd /root/migration_backup
 tar -pcJf cog.tar.xz -C /usr/local cog
+```
+
+* Solr indices
+
+```bash
+mkdir /root/migration_backup
+cd /root/migration_backup
 tar -pcJf solr-index.tar.xz -C /esg solr-index
 ```
 
@@ -100,6 +114,13 @@ scp /root/migration_backup/* "root@{HOST_DEST}:/root/pre_migration_backup"
 tar -pcJf home.tar.xz -C / home
 cp -p /root/.bashrc .
 cp -p /root/.pgpass .
+```
+
+* Thredds
+
+```bash
+mkdir -p /root/migration_backup
+cd /root/migration_backup
 tar -pcJf thredds.tar.xz -C /esg/content thredds
 ```
 
@@ -218,7 +239,7 @@ mkdir -p /root/fresh_install_backup
 mv /usr/local/cog /root/fresh_install_backup && tar -C /usr/local -xapf /root/migration_backup/cog.tar.xz
 ```
 
-* Solr
+* Solr indices
 
 ```bash
 mkdir -p /root/fresh_install_backup
@@ -405,4 +426,14 @@ Then add the following line in the root's crontab:
 
 ```
 0,30 * * * *   /root/miniconda2/envs/sandbox/bin/python /root/scripts/esgf_stats.py 2>&1 |/usr/bin/logger -t '[STATS]'
+```
+### 13. Delete migration archives
+
+!!! warning
+    Do not run the following commands until you are very sure that the nodes are alright
+
+On *-new:
+
+```bash
+rm -fr /root/migration_backup
 ```
