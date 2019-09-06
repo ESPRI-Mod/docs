@@ -1,9 +1,9 @@
 MIGRATION FROM CENTOS 6 to 7
 ============================
 
-* Version: 0.0.1
+* Version: 0.0.2
 * Date: 03/09/2019
-* Authors: Sébastien Gardoll
+* Authors: Sébastien Gardoll, Pierre Logerais
 * Keywords: migration centos backup esgf index data node
 
 ## Description
@@ -138,13 +138,42 @@ cp -p /root/pre_migration_backup/config/.esgf_pass
 On *-new VMs (both !)
 
 ```bash
-openssl enc -d -aes256 -in /root/pre_migration_backup/certs.tar.xz.enc | tar -C /root/pre_migration_backup -xap # Provide a password.
+openssl enc -d -aes256 -in /root/pre_migration_backup/certs.tar.xz.enc | tar -C /root -xap # Provide a password.
+chown -R root:root /root/certs ; chmod -R go= /root/certs
 ```
 
 #### Installation setup
 
 - Set the host_var files so as to pick up the certificate files.
-  => replace the prefix of the path by: /root/migration_backup/certs
+
+For the index-new (esgf-node.ipsl.upmc.fr):
+
+```
+globushostcert: /root/certs/grid-security/hostcert.pem
+globushostkey: /root/certs/grid-security/hostkey.pem
+
+
+myproxycacert: /root/certs/esgfcerts/cacert.pem
+myproxycakey: /root/certs/esgfcerts/cakey.pem
+myproxy_signing_policy: /root/certs/esgfcerts/globus_simple_ca_85bc937c_setup-0/85bc937c.signing_policy
+
+hostkey_src: /root/certs/certs/hostkey.pem
+hostcert_src: /root/certs/certs/hostcert.pem
+cachain_src: /root/certs/certs/cachain.pem
+```
+
+For the data-new (vesg.ipsl.upmc.fr.yml):
+
+```
+globushostcert: /root/certs/grid-security/hostcert.pem
+globushostkey: /root/certs/grid-security/hostkey.pem
+
+hostkey_src: /root/certs/certs/hostkey.pem
+hostcert_src: /root/certs/certs/hostcert.pem
+cachain_src: /root/certs/certs/cachain.pem
+```
+
+**Don't forget to setup the globus variables for both files**
 
 - On esgf-watch-dog@esgf-monitoring:
 
@@ -166,8 +195,7 @@ ansible-playbook -i hosts.prod -u root --skip-tags gridftp install.yml
 
 ```bash
 chown root:tomcat /esg/config/.esgf_pass
-rm -fr /root/migration_backup/certs
-rm -fr /root/pre_migration_backup/certs
+rm -fr /root/pre_migration_backup
 ```
 
 - follow the post installation section of the upgrade procedure.
