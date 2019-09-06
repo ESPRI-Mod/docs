@@ -19,6 +19,7 @@ A Linux machine, and root access to the remote machine where the stack is instal
 ### Dependencies
 
 * ansible-playbook >= 2.7.
+* Vagrant + VirtualBox (for testing)
 
 ## Procedure
 
@@ -79,6 +80,9 @@ Then you can restart the SSH daemon with `service sshd restart`.
 From the `ansible-wps-playbook` repo, run the following command :
 
 ```bash
+script installation.log
+export ANSIBLE_NOCOLOR=true # Make the log readable.
+
 ansible-playbook -i myhost.cfg playbook.yml -K
 ```
 
@@ -96,4 +100,23 @@ Everything else is in the playbook :)
 
 ### Tests
 
+#### Check if the WPS is running
+
+On the machine where the WPS is installed, you can use birdy along with emu to check if your WPS is running. You can run `ipython` and run the following commands in it :
+
+```py
+from birdy import WPSClient
+emu = WPSClient(url='http://localhost:5000/wps')
+emu.hello(name='Birdy').get()[0]
+```
+
+If you don’t see any error and the hello is returning a value, that means your WPS is running.
+
+#### Test with Vagrant
+
 **FIXME**
+
+#### Check the configuration
+
+**FIXME**
+
