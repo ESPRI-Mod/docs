@@ -22,7 +22,7 @@ At IPSL, the only requirement is to have an access to the account esgf-watch-dog
 
 The command is `esgf <groupe>-<nœud> status`.
 `groupe` can be set to `int`, `dev` or `prod`. 
-`nœud` means the exact node you want to check. The 3 accepted values for this parameter are `index`, `idp` ou `data`. This parameter is optional, and if you omit it the test suite will check every node in that group.
+`nœud` means the exact node you want to check. The 3 accepted values for this parameter are `index`, `idp` ou `data`. This parameter is optional, and if you omit it the ESGF-Ansible will check every node in that group.
 
 For example, if you want to have the status of the data node in production :
 
@@ -33,7 +33,7 @@ esgf prod-data status
 If you want to have the status of both integration nodes :
 
 ```bash
-esggf int status
+esgf int status
 ```
 
 * Restart nodes
@@ -43,20 +43,20 @@ The command is the same as above, but with `restart` at the end.
 For example, if you want to restart the data node in production :
 
 ```bash
-esgf prod-data status
+esgf prod-data restart
 ```
 
 If you want to restart both integration nodes :
 
 ```bash
-esggf int status
+esggf int restart
 ```
 
 * More detailed tests
 
-Normally, there are tests that run every hour and do multiple specific tests on nodes. They are disabled for now, but this should be reactivated after the migrations to CentOS 7 and ESGF 4.0.4.
+Normally, there are tests (ESGF test-suite) that run every hour and do multiple specific tests on nodes. They are disabled for now, but this should be reactivated after the migrations to CentOS 7 and ESGF 4.0.4.
 
-These tests are bash scripts, that run a singularity container made specifically for tests. This container has python3 and launches nose tests with python3.
+These tests, ESGF test-suite, are bash scripts, that run a singularity container made specifically for tests. This container has python3 and launches nose tests with python3.
 
 You can find them in the crontab : the command `crontab -l` on esgf-monitoring returns the following :
 
