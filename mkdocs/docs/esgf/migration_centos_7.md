@@ -69,7 +69,7 @@ tar -pcJf cog.tar.xz -C /usr/local cog
 ```bash
 mkdir /root/migration_backup
 cd /root/migration_backup
-tar -pcJf solr-index.tar.xz -C /esg solr-index
+tar -pcf solr-index.tar -C /esg solr-index # Compression takes too much time.
 ```
 
 * PostgreSQL
@@ -121,7 +121,7 @@ cp -p /root/.pgpass .
 ```bash
 mkdir -p /root/migration_backup
 cd /root/migration_backup
-tar -pcJf thredds.tar.xz -C /esg/content thredds
+tar -pcf thredds.tar -C /esg/content thredds # Compression takes too much time.
 ```
 
 * PostgreSQL
