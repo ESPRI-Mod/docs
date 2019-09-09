@@ -49,7 +49,7 @@ esgf prod-data restart
 If you want to restart both integration nodes :
 
 ```bash
-esggf int restart
+esgf int restart
 ```
 
 * More detailed tests
