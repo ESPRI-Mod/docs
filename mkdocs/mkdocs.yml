@@ -10,6 +10,7 @@ nav:
     - ESGF administration:
       - Machine Setup : esgf/machine_setup.md
       - Certificates Management : esgf/cert_mgmt.md
+      - Testing : esgf/testing.md
   - ES-DOC:
     - Errata:
       - Web Service: esdoc/errata/ws.md
