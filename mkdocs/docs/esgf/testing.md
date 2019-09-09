@@ -33,7 +33,7 @@ esgf prod-data status
 If you want to have the status of both integration nodes :
 
 ```bash
-esggf int status
+esgf int status
 ```
 
 * Restart nodes
@@ -49,7 +49,7 @@ esgf prod-data status
 If you want to restart both integration nodes :
 
 ```bash
-esggf int status
+esgf int status
 ```
 
 * More detailed tests
