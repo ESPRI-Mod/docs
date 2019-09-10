@@ -1,7 +1,7 @@
 MIGRATION FROM CENTOS 6 to 7
 ============================
 
-* Version: 0.0.4
+* Version: 0.0.5
 * Date: 03/09/2019
 * Authors: Sébastien Gardoll, Pierre Logerais
 * Keywords: migration centos backup esgf index data node
@@ -89,6 +89,7 @@ HOST_DEST='esgf-node.ipsl.upmc.fr'
 ssh "root@${HOST_DEST}" 'mkdir -p /root/migration_backup'
 ssh "root@${HOST_DEST}" 'chmod go= /root/migration_backup'
 scp /root/migration_backup/* "root@${HOST_DEST}:/root/migration_backup"
+scp /root/migration_backup/.* "root@${HOST_DEST}:/root/migration_backup"
 ```
 
 ### 6. Backup **data-old** (destination is the data-new)
@@ -140,6 +141,7 @@ HOST_DEST='vesg.ipsl.upmc.fr'
 ssh "root@${HOST_DEST}" 'mkdir -p /root/migration_backup'
 ssh "root@${HOST_DEST}" 'chmod go= /root/migration_backup'
 scp /root/migration_backup/* "root@${HOST_DEST}:/root/migration_backup"
+scp /root/migration_backup/.* "root@${HOST_DEST}:/root/migration_backup"
 ```
 
 ### 7. Install from scratch ESGF 4.0.4 on the *-new VMs
@@ -257,6 +259,7 @@ Backup the fresly installed db's
 ```bash
 mkdir -p /root/fresh_install_backup
 cd /root/fresh_install_backup
+systemctl start postgresql
 pg_dump -U dbsuper --clean -Z 6 -v -F c esgcet > db_esgcet.bak 2> db_esgcet_backup.log || echo '***** ERROR *****'
 pg_dump -U dbsuper --clean -Z 6 -v -F c cogdb > db_cogdb.bak 2> db_cogdb_backup.log || echo '***** ERROR *****'
 pg_dump -U dbsuper --clean -Z 6 -v -F c slcsdb > db_slcsdb.bak 2>db_slcsdb_backup.log || echo '***** ERROR *****'
@@ -293,6 +296,7 @@ Backup the fresly installed db's
 ```bash
 mkdir -p /root/fresh_install_backup
 cd /root/fresh_install_backup
+systemctl start postgresql
 pg_dump -U dbsuper --clean -Z 6 -v -F c esgcet > db_esgcet.bak 2> db_esgcet_backup.log || echo '***** ERROR *****'
 pg_dump -U dbsuper --clean -Z 6 -v -F c postgres > db_postgres.bak 2>db_postgres_backup.log || echo '***** ERROR *****'
 ```
