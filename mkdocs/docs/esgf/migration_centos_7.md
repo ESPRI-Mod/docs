@@ -205,7 +205,7 @@ git checkout 4.0.4
 git status
 source activate ansible
 export ANSIBLE_NOCOLOR=true
-ansible-playbook -i hosts.prod -u root --skip-tags gridftp install.yml
+ansible-playbook -i ~/scripts/esgf-ansible/hosts.prod -u root --skip-tags gridftp install.yml
 ```
 
 #### Post installation
