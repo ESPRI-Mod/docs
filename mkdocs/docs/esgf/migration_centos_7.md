@@ -146,12 +146,12 @@ scp /root/migration_backup/* "root@${HOST_DEST}:/root/migration_backup"
 
 #### Pre installation
 
-* Set the same passwords
+* Set the same passwords on the *-new Vms (both)
 
 ```bash
 tar -C /root/pre_migration_backup -xapf /root/pre_migration_backup/esgf_config.tar.xz
 mkdir -p /esg/config
-cp -p /root/pre_migration_backup/config/.esgf_pass 
+cp -p /root/pre_migration_backup/config/.esgf_pass /esg/config
 ```
 
 * Certs
@@ -159,7 +159,7 @@ cp -p /root/pre_migration_backup/config/.esgf_pass
 On *-new VMs (both !)
 
 ```bash
-openssl enc -d -aes256 -in /root/pre_migration_backup/certs.tar.xz.enc | tar -C /root -xap # Provide a password.
+openssl enc -d -aes256 -in /root/pre_migration_backup/certs.tar.xz.enc | tar -C /root -xJp # Provide a password.
 chown -R root:root /root/certs ; chmod -R go= /root/certs
 ```
 
