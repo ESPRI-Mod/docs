@@ -324,8 +324,8 @@ chmod -R o= /esg/content/thredds
 systemctl stop firewalld
 systemctl disable firewalld
 yum -y install iptables-services
-systemctl start iptables-services
-systemctl enable iptables-services
+systemctl start iptables
+systemctl enable iptables
 iptables -A INPUT -i eth0 -m state --state ESTABLISHED -j ACCEPT
 iptables -A INPUT -i eth0 -m state --state NEW -s 66.249.64.0/20 -j REJECT --reject-with icmp-port-unreachable
 iptables -A INPUT -i eth0 -m state --state NEW -s 37.9.113.0/24 -j REJECT --reject-with icmp-port-unreachable
