@@ -39,7 +39,7 @@ HOST_DEST='esgf-node.ipsl.upmc.fr'
 mkdir /root/migration_backup
 cd /root/migration_backup
 tar -pcJf esgf_config.tar.xz -C /esg config
-mkdir certs
+mkdir -p certs
 cp -rp /etc/certs certs
 cp -rp /etc/esgfcerts certs
 cp -rp /etc/grid-security certs
@@ -47,9 +47,9 @@ cp -rp /var/lib/globus/simple_ca certs
 tar -pcJf - certs | openssl enc -e -aes256 -out certs.tar.xz.enc # Provide a password.
 rm -fr certs
 
-ssh "root@${HOST_DEST}" 'mkdir /root/pre_migration_backup'
+ssh "root@${HOST_DEST}" 'mkdir -p /root/pre_migration_backup'
 ssh "root@${HOST_DEST}" 'chmod go= /root/pre_migration_backup'
-scp /root/migration_backup/* "root@{HOST_DEST}:/root/pre_migration_backup"
+scp /root/migration_backup/* "root@${HOST_DEST}:/root/pre_migration_backup"
 
 tar -pcJf home.tar.xz -C / home
 cp -p /root/.bashrc .
@@ -59,7 +59,7 @@ cp -p /root/.pgpass .
 * Cog
 
 ```bash
-mkdir /root/migration_backup
+mkdir -p /root/migration_backup
 cd /root/migration_backup
 tar -pcJf cog.tar.xz -C /usr/local cog
 ```
@@ -67,7 +67,7 @@ tar -pcJf cog.tar.xz -C /usr/local cog
 * Solr indices
 
 ```bash
-mkdir /root/migration_backup
+mkdir -p /root/migration_backup
 cd /root/migration_backup
 tar -pcf solr-index.tar -C /esg solr-index # Compression takes too much time.
 ```
@@ -86,9 +86,9 @@ pg_dump -U dbsuper --clean -Z 6 -v -F c postgres > db_postgres.bak 2>db_postgres
 
 ```bash
 HOST_DEST='esgf-node.ipsl.upmc.fr'
-ssh "root@${HOST_DEST}" 'mkdir /root/migration_backup'
+ssh "root@${HOST_DEST}" 'mkdir -p /root/migration_backup'
 ssh "root@${HOST_DEST}" 'chmod go= /root/migration_backup'
-scp /root/migration_backup/* "root@{HOST_DEST}:/root/migration_backup"
+scp /root/migration_backup/* "root@${HOST_DEST}:/root/migration_backup"
 ```
 
 ### 6. Backup **data-old** (destination is the data-new)
@@ -100,16 +100,16 @@ HOST_DEST='vesg.ipsl.upmc.fr'
 mkdir -p /root/migration_backup
 cd /root/migration_backup
 tar -pcJf esgf_config.tar.xz -C /esg config
-mkdir certs
+mkdir -p certs
 cp -rp /etc/certs certs
 cp -rp /etc/esgfcerts certs
 cp -rp /etc/grid-security certs
 tar -pcJf - certs | openssl enc -e -aes256 -out certs.tar.xz.enc # Provide a password.
 rm -fr certs
 
-ssh "root@${HOST_DEST}" 'mkdir /root/pre_migration_backup'
+ssh "root@${HOST_DEST}" 'mkdir -p /root/pre_migration_backup'
 ssh "root@${HOST_DEST}" 'chmod go= /root/pre_migration_backup'
-scp /root/migration_backup/* "root@{HOST_DEST}:/root/pre_migration_backup"
+scp /root/migration_backup/* "root@${HOST_DEST}:/root/pre_migration_backup"
 
 tar -pcJf home.tar.xz -C / home
 cp -p /root/.bashrc .
@@ -137,9 +137,9 @@ pg_dump -U dbsuper --clean -Z 6 -v -F c postgres > db_postgres.bak 2>db_postgres
 
 ```bash
 HOST_DEST='vesg.ipsl.upmc.fr'
-ssh "root@${HOST_DEST}" 'mkdir /root/migration_backup'
+ssh "root@${HOST_DEST}" 'mkdir -p /root/migration_backup'
 ssh "root@${HOST_DEST}" 'chmod go= /root/migration_backup'
-scp /root/migration_backup/* "root@{HOST_DEST}:/root/migration_backup"
+scp /root/migration_backup/* "root@${HOST_DEST}:/root/migration_backup"
 ```
 
 ### 7. Install from scratch ESGF 4.0.4 on the *-new VMs
