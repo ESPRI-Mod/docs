@@ -248,7 +248,7 @@ chmod -R o= /usr/local/cog
 
 ```bash
 mkdir -p /root/fresh_install_backup
-mv /esg/solr-index /root/fresh_install_backup && tar -C /esg -xapf /root/migration_backup/solr-index.tar.xz
+tar -C /esg -xpf /root/migration_backup/solr-index.tar
 chown -R solr:solr /esg/solr-index
 chmod -R o= /esg/solr-index
 ```
@@ -311,7 +311,7 @@ pg_restore --clean -U dbsuper -d esgcet -v -F c db_esgcet.bak 2>db_esgcet_injec.
 
 ```bash
 mkdir -p /root/fresh_install_backup
-mv /esg/content/thredds /root/fresh_install_backup && tar -C /esg/content -xapf /root/migration_backup/thredds.tar.xz
+mv /esg/content/thredds /root/fresh_install_backup && tar -C /esg/content -xpf /root/migration_backup/thredds.tar
 chown -R tomcat:tomcat /esg/content/thredds
 chmod -R o= /esg/content/thredds
 ```
