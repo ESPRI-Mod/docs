@@ -59,12 +59,13 @@ cd /root/migration_backup
 tar -pcJf cog.tar.xz -C /usr/local cog
 ```
 
-* Solr indices
+* Solr
 
 ```bash
 mkdir -p /root/migration_backup
 cd /root/migration_backup
 tar -pcf solr-index.tar -C /esg solr-index # Compression takes too much time.
+tar -pcJf solr-home.tar.xz -C /usr/local solr-home
 ```
 
 * PostgreSQL
@@ -83,8 +84,8 @@ pg_dump -U dbsuper --clean -Z 6 -v -F c postgres > db_postgres.bak 2>db_postgres
 HOST_DEST='esgf-node.ipsl.upmc.fr'
 ssh "root@${HOST_DEST}" 'mkdir -p /root/migration_backup'
 ssh "root@${HOST_DEST}" 'chmod go= /root/migration_backup'
+shopt -s dotglob # for considering dot files
 scp /root/migration_backup/* "root@${HOST_DEST}:/root/migration_backup"
-scp /root/migration_backup/.* "root@${HOST_DEST}:/root/migration_backup"
 ```
 
 ### 6. Backup **data-old** (destination is the data-new)
@@ -130,8 +131,8 @@ pg_dump -U dbsuper --clean -Z 6 -v -F c postgres > db_postgres.bak 2>db_postgres
 HOST_DEST='vesg.ipsl.upmc.fr'
 ssh "root@${HOST_DEST}" 'mkdir -p /root/migration_backup'
 ssh "root@${HOST_DEST}" 'chmod go= /root/migration_backup'
+shopt -s dotglob # for considering dot files
 scp /root/migration_backup/* "root@${HOST_DEST}:/root/migration_backup"
-scp /root/migration_backup/.* "root@${HOST_DEST}:/root/migration_backup"
 ```
 
 ### 7. Install from scratch ESGF 4.0.4 on the *-new VMs
@@ -190,14 +191,16 @@ cachain_src: /root/certs/certs/cachain.pem
 
 - Globus user setup
 
-Ansible still requires you to have a globus user set, even if it’s not used. Therefore, it’s mandatory to create a globus user on both nodes, and to add it to the appropriate groups.
+Ansible still requires you to have a globus user set, even if it’s not used.
+Therefore, it’s mandatory to create a globus user on both nodes,
+and to add it to the appropriate groups.
 
-On both machines, add the following line to your `/etc/passwd` file :
+On both machines, add the following line to your `/etc/passwd` file:
 ```bash
 globus:x:22001:20028:Globus System User:/home/globus:/bin/bash
 ```
 
-And the following to your `/etc/group` file :
+And the following to your `/etc/group` file:
 ```bash
 globus:x:20028:globus
 ```
@@ -222,13 +225,18 @@ ansible-playbook -i ~/scripts/esgf-ansible/hosts.prod -u root --skip-tags gridft
 
 - Setting up the correct permissions for both nodes
 
-The configuration files are a lot more straightforward in ESGF 4 regarding their permissions : root is the owner of everything, minus the `myproxy` folder on the index node. This wasn’t the case for previous versions of ESGF. However, we can not necessarily copy the configuration from `migration_backup` just like that, because tar isn’t very consistent in how it preserves permissions.
+The configuration files are a lot more straightforward in ESGF 4 regarding
+their permissions : root is the owner of everything, minus the `myproxy` folder
+on the index node. This wasn’t the case for previous versions of ESGF. However,
+we can not necessarily copy the configuration from `migration_backup` just like
+that, because tar isn’t very consistent in how it preserves permissions.
 
 On both nodes, run the following :
 ```bash
+mkdir -p /root/fresh_install_backup
 cd /root/migration_backup
 tar -xJf esgf_config.tar.xz
-cp -Rp /esg/config /esg/config_backup
+cp -Rp /esg/config /root/fresh_install_backup
 yes | cp -Rp /root/migration_backup/config/* /esg/config
 ```
 
@@ -236,7 +244,7 @@ On the **data-new** node, run the following :
 
 ```bash
 cd /esg/config
-chown -R root:root *
+chown -R root:root * # But don't change the hidden files.
 chmod -R u=rwX,g=rX,o=rX *
 chmod o= .esg*
 ```
@@ -245,23 +253,26 @@ On the **index-new** node, run the following :
 ```bash
 cd /esg/config
 mv myproxy ..
-chown -R root:root *
+chown -R root:root * # But don't change the hidden files.
 chmod -R u=rwX,g=rX,o=rX *
 chmod o= .esg*
 mv ../myproxy .
 chown -R myproxy:myproxy myproxy
 ```
 
-The permissions should not be changed themselves, you only need to make sure the owner is always myproxy.
+The permissions should not be changed themselves, you only need to make sure
+the owner is always myproxy.
 
 - Creating esguser on the data node
 
-On **data-new**, run :
+On **data-new**, run:
 ```bash
 useradd /home/esguser
 ```
 
-Then edit the `/etc/group` file to add esguser to the group `tomcat`. The line for `tomcat` should look like this :
+Then edit the `/etc/group` file to add esguser to the group `tomcat`.
+The line for `tomcat` should look like this:
+
 ```bash
 tomcat:x:1003:tomcat,esguser
 ```
@@ -295,13 +306,17 @@ chown -R apache:apache /usr/local/cog
 chmod -R o= /usr/local/cog
 ```
 
-* Solr indices
+* Solr
 
 ```bash
-mkdir -p /root/fresh_install_backup
 tar -C /esg -xpf /root/migration_backup/solr-index.tar
 chown -R solr:solr /esg/solr-index
 chmod -R o= /esg/solr-index
+
+mkdir -p /root/fresh_install_backup
+mv /usr/local/solr-home /root/fresh_install_backup && tar -C /usr/local -xavf /root/migration_backup/solr-home.tar.xz
+chown -R solr:solr /usr/local/solr-home
+chmod -R o= /usr/local/solr-home
 ```
 
 * PostgreSQL
@@ -317,12 +332,38 @@ pg_dump -U dbsuper --clean -Z 6 -v -F c slcsdb > db_slcsdb.bak 2>db_slcsdb_backu
 pg_dump -U dbsuper --clean -Z 6 -v -F c postgres > db_postgres.bak 2>db_postgres_backup.log || echo '***** ERROR *****'
 ```
 
+Delete and recreate the data bases
+(--create and --clean options generate errors while pg_restoring)
+
+```bash
+# Create the user esgcet without admin privileges as it is mandatory for the
+# migration of the esgcet database (ESGF-Ansible did'nt create it).
+createuser --interactive --pwprompt
+# Give the following values:
+# - esgcet as the user name
+# - the same password as dbsuper
+# - don't give any special permissions
+sudo -u postgres psql -U postgres # Connect to the PostgreSQL.
+```
+then run these instructions:
+
+```sql
+drop database cogdb;
+create database cogdb with owner dbsuper;
+
+drop database slcsdb;
+create database slcsdb with owner dbsuper;
+
+drop database esgcet;
+create database esgcet with owner esgcet;
+```
+
 Inject the data from index-old
 ```bash
 cd /root/migration_backup
-pg_restore --clean -U dbsuper -d esgcet -v -F c db_esgcet.bak 2>db_esgcet_injec.log || echo '***** ERROR *****'
-pg_restore --clean -U dbsuper -d cogdb  -v -F c db_cogdb.bak 2>db_cogdb_injec.log || echo '***** ERROR *****'
-pg_restore --clean -U dbsuper -d slcsdb -v -F c db_slcsdb.bak 2>db_slcsdb_injec.log || echo '***** ERROR *****'
+pg_restore -U dbsuper -d esgcet -v -F c db_esgcet.bak 2>db_esgcet_injec.log || echo '***** ERROR *****'
+pg_restore -U dbsuper -d cogdb  -v -F c db_cogdb.bak 2>db_cogdb_injec.log || echo '***** ERROR *****'
+pg_restore -U dbsuper -d slcsdb -v -F c db_slcsdb.bak 2>db_slcsdb_injec.log || echo '***** ERROR *****'
 ```
 
 * Modify /root/.bashrc according to /root/migration_backup/.bashrc
@@ -352,10 +393,24 @@ pg_dump -U dbsuper --clean -Z 6 -v -F c esgcet > db_esgcet.bak 2> db_esgcet_back
 pg_dump -U dbsuper --clean -Z 6 -v -F c postgres > db_postgres.bak 2>db_postgres_backup.log || echo '***** ERROR *****'
 ```
 
+Delete and recreate the data bases
+(--create and --clean options generate errors while pg_restoring)
+
+```bash
+# the user esgcet alreay exists.
+sudo -u postgres psql -U postgres # Connect to the PostgreSQL.
+```
+then run these instructions:
+
+```sql
+drop database esgcet;
+create database esgcet with owner esgcet;
+```
+
 Inject the data from data-old
 ```bash
 cd /root/migration_backup
-pg_restore --clean -U dbsuper -d esgcet -v -F c db_esgcet.bak 2>db_esgcet_injec.log || echo '***** ERROR *****'
+pg_restore -U dbsuper -d esgcet -v -F c db_esgcet.bak 2>db_esgcet_injec.log || echo '***** ERROR *****'
 ```
 
 * Thredds
@@ -414,6 +469,7 @@ iptables -A INPUT -i ${INTERFACE} -m state --state NEW -s 91.242.162.0/24 -j REJ
 iptables -A INPUT -i ${INTERFACE} -m state --state NEW -s 51.255.65.0/24 -j REJECT --reject-with icmp-port-unreachable
 iptables -A INPUT -i ${INTERFACE} -m state --state NEW -s 180.76.15.0/24 -j REJECT --reject-with icmp-port-unreachable
 iptables -A INPUT -i ${INTERFACE} -m state --state NEW -s 207.46.13.0/24 -j REJECT --reject-with icmp-port-unreachable
+
 service iptables save
 ```
 
@@ -511,6 +567,6 @@ On *-new:
 
 ```bash
 rm -fr /root/migration_backup
+shopt -s dotglob # for considering dot files
 chmod -R go= /root/*
-chmod -R go= /root/.*
 ```
