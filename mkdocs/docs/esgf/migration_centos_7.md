@@ -238,6 +238,7 @@ On the **data-new** node, run the following :
 cd /esg/config
 chown -R root:root *
 chmod -R u=rwX,g=rX,o=rX *
+chmod o= .esg*
 ```
 
 On the **index-new** node, run the following :
@@ -246,6 +247,7 @@ cd /esg/config
 mv myproxy ..
 chown -R root:root *
 chmod -R u=rwX,g=rX,o=rX *
+chmod o= .esg*
 mv ../myproxy .
 chown -R myproxy:myproxy myproxy
 ```
