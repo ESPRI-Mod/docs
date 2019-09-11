@@ -198,6 +198,22 @@ cachain_src: /root/certs/certs/cachain.pem
 
 **Don't forget to setup the globus variables for both files**
 
+- Globus user setup
+
+Ansible still requires you to have a globus user set, even if it’s not used. Therefore, it’s mandatory to create a globus user on both nodes, and to add it to the appropriate groups.
+
+On both machines, add the following line to your `/etc/passwd` file :
+```bash
+globus:x:22001:20028:Globus System User:/home/globus:/bin/bash
+```
+
+And the following to your `/etc/group` file :
+```bash
+globus:x:20028:globus
+```
+
+These lines should match those on the machine where you had your previous installation.
+
 - On esgf-watch-dog@esgf-monitoring:
 
 ```bash
@@ -213,6 +229,50 @@ ansible-playbook -i ~/scripts/esgf-ansible/hosts.prod -u root --skip-tags gridft
 #### Post installation
 
 - Configuration of authorization and policies (Guillaume)
+
+- Setting up the correct permissions for both nodes
+
+The configuration files are a lot more straightforward in ESGF 4 regarding their permissions : root is the owner of everything, minus the `myproxy` folder on the index node. This wasn’t the case for previous versions of ESGF. However, we can not necessarily copy the configuration from `migration_backup` just like that, because tar isn’t very consistent in how it preserves permissions.
+
+On both nodes, run the following :
+```bash
+cd /root/migration_backup
+tar -xJf esgf_config.tar.xz
+cp -Rp /esg/config /esg/config_backup
+yes | cp -Rp /root/migration_backup/config/* /esg/config
+```
+
+On the **data-new** node, run the following :
+
+```bash
+cd /esg/config
+chown -R root:root *
+chmod -R u=rwX,g=rX,o=rX *
+```
+
+On the **index-new** node, run the following :
+```bash
+cd /esg/config
+mv myproxy ..
+chown -R root:root *
+chmod -R u=rwX,g=rX,o=rX *
+mv ../myproxy .
+chown -R myproxy:myproxy myproxy
+```
+
+The permissions should not be changed themselves, you only need to make sure the owner is always myproxy.
+
+- Creating esguser on the data node
+
+On **data-new**, run :
+```bash
+useradd /home/esguser
+```
+
+Then edit the `/etc/group` file to add esguser to the group `tomcat`. The line for `tomcat` should look like this :
+```bash
+tomcat:x:1003:tomcat,esguser
+```
 
 - Some commands:
 
