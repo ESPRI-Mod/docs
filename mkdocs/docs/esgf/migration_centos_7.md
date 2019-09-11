@@ -46,11 +46,6 @@ cp -rp /etc/grid-security certs
 cp -rp /var/lib/globus/simple_ca certs
 tar -pcJf - certs | openssl enc -e -aes256 -out certs.tar.xz.enc # Provide a password.
 rm -fr certs
-
-ssh "root@${HOST_DEST}" 'mkdir -p /root/pre_migration_backup'
-ssh "root@${HOST_DEST}" 'chmod go= /root/pre_migration_backup'
-scp /root/migration_backup/* "root@${HOST_DEST}:/root/pre_migration_backup"
-
 tar -pcJf home.tar.xz -C / home
 cp -p /root/.bashrc .
 cp -p /root/.pgpass .
@@ -107,11 +102,6 @@ cp -rp /etc/esgfcerts certs
 cp -rp /etc/grid-security certs
 tar -pcJf - certs | openssl enc -e -aes256 -out certs.tar.xz.enc # Provide a password.
 rm -fr certs
-
-ssh "root@${HOST_DEST}" 'mkdir -p /root/pre_migration_backup'
-ssh "root@${HOST_DEST}" 'chmod go= /root/pre_migration_backup'
-scp /root/migration_backup/* "root@${HOST_DEST}:/root/pre_migration_backup"
-
 tar -pcJf home.tar.xz -C / home
 cp -p /root/.bashrc .
 cp -p /root/.pgpass .
@@ -151,9 +141,9 @@ scp /root/migration_backup/.* "root@${HOST_DEST}:/root/migration_backup"
 * Set the same passwords on the *-new Vms (both)
 
 ```bash
-tar -C /root/pre_migration_backup -xapf /root/pre_migration_backup/esgf_config.tar.xz
+tar -C /root/migration_backup -xapf /root/migration_backup/esgf_config.tar.xz
 mkdir -p /esg/config
-cp -p /root/pre_migration_backup/config/.esgf_pass /esg/config
+cp -p /root/migration_backup/config/.esgf_pass /esg/config
 ```
 
 * Certs
@@ -161,7 +151,7 @@ cp -p /root/pre_migration_backup/config/.esgf_pass /esg/config
 On *-new VMs (both !)
 
 ```bash
-openssl enc -d -aes256 -in /root/pre_migration_backup/certs.tar.xz.enc | tar -C /root -xJp # Provide a password.
+openssl enc -d -aes256 -in /root/migration_backup/certs.tar.xz.enc | tar -C /root -xJp # Provide a password.
 chown -R root:root /root/certs ; chmod -R go= /root/certs
 ```
 
@@ -278,7 +268,6 @@ tomcat:x:1003:tomcat,esguser
 
 ```bash
 chown root:tomcat /esg/config/.esgf_pass
-rm -fr /root/pre_migration_backup
 ```
 
 - follow the post installation section of the upgrade procedure.
@@ -521,4 +510,5 @@ On *-new:
 ```bash
 rm -fr /root/migration_backup
 chmod -R go= /root/*
+chmod -R go= /root/.*
 ```
