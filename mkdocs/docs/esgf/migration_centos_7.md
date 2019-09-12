@@ -26,6 +26,8 @@ data-new: data node after migrating (under CentOS 7)
 
 ### 2. Shutdown the *-new VMs
 
+Don’t forget to disable notifications on nagios !
+
 ### 3. Rename the host name of the *-old VMs
 
 ### 4. Boot the *-new VMs and rename their host name
@@ -558,7 +560,16 @@ Then add the following line in the root's crontab:
 ```
 0,30 * * * *   /root/miniconda2/envs/sandbox/bin/python /root/scripts/esgf_stats.py 2>&1 |/usr/bin/logger -t '[STATS]'
 ```
-### 13. Delete migration archives
+
+### 13. Re-enable notifications
+
+You probably turned off the notifications before upgrading, so as to avoid getting too many useless e-mails from nagios while you were upgrading.
+
+When everything is up and running swimmingly, you can enable them back again :
+
+On the nagios grid which shows all machines, select one of the nodes that you did an upgrade for. Then select « Enable notifications for all services on this host ». Then, get back to the grid view, select the test `check_nrpe_test` and disable notifications from it. Repeat this process for however many nodes you upgraded.
+
+### 14. Delete migration archives
 
 !!! warning
     Do not run the following commands until you are very sure that the nodes are alright
