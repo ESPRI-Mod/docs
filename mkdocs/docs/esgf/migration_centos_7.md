@@ -160,7 +160,13 @@ chown -R root:root /root/certs ; chmod -R go= /root/certs
 
 #### Installation setup
 
-- Set the host_var files so as to pick up the certificate files.
+- Set the **temporary** host_var files so as to pick up the backuped certificate files.
+
+!!! warning
+    these host_var files replace the previous ones.
+    They are used only for the 'from scratch' installation.
+    After the installation, the previous host_var files must be used.
+    (see post installation)
 
 For the index-new (esgf-node.ipsl.upmc.fr):
 
@@ -189,7 +195,7 @@ hostcert_src: /root/certs/certs/hostcert.pem
 cachain_src: /root/certs/certs/cachain.pem
 ```
 
-**Don't forget to setup the globus variables for both files**
+Set the globus variables (globus_user and globus_pass) in both host_var files
 
 - Globus user setup
 
@@ -285,7 +291,9 @@ tomcat:x:1003:tomcat,esguser
 chown root:tomcat /esg/config/.esgf_pass
 ```
 
-- follow the post installation section of the upgrade procedure.
+- Follow the post installation section of the upgrade procedure.
+
+- Replace the temporary host_var files by the previous ones.
 
 ### 8. Install the data for **index-new**
 
@@ -476,6 +484,9 @@ service iptables save
 ```
 
 ### 12. Cron scripts
+
+!!! note
+    Re-installation of the cron scripts is only for the production nodes
 
 Root's crontab on index-old:
 ```
