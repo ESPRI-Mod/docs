@@ -163,8 +163,10 @@ chown -R root:root /root/certs ; chmod -R go= /root/certs
 - Set the **temporary** host_var files so as to pick up the backuped certificate files.
 
 !!! warning
-    these host_var files replace the previous ones.
+    These host_var files replace the previous ones.
     They are used only for the 'from scratch' installation.
+    The installation is **from scratch** that means that the certificate files
+    are not yet located in their final places.
     After the installation, the previous host_var files must be used.
     (see post installation)
 
