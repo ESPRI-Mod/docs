@@ -77,11 +77,13 @@ pip install ansible
 
 ### Installation of ESGF-Ansible
 
-```bash
+Change the highlighted value.
+
+```bash hl_lines="4"
 PARENT_DIR="${HOME}"
 cd "${PARENT_DIR}"
 
-TAG_NAME='4.0.4'
+TAG_NAME='XXX'
 git clone https://github.com/ESGF/esgf-ansible.git && cd esgf-ansible && git checkout $TAG_NAME
 ```
 

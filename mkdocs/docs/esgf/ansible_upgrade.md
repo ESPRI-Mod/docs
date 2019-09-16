@@ -51,11 +51,13 @@ For running ESGF-Ansible:
 
 !!! note
     Custom and run these commands every time you execute the code of the procedure.
+    You must set the TAG_VERSION value at least.
 
-```bash
+
+```bash hl_lines="3" 
 export GROUP='dev' # The group of idp/index and data nodes (e.g.: dev nodes).
 export PARENT_DIR="${HOME}" # The parent directory that contains ESGF-Ansible repository.
-export TAG_VERSION='4.0.4' # Checkout the new version of ESGF-Ansible to be upgraded to.
+export TAG_VERSION='XXX' # Checkout the new version of ESGF-Ansible to be upgraded to.
 ```
 
 ### Node preparation
@@ -173,7 +175,7 @@ service httpd reload
 
 The root page of a **data node** web site usually points to the generic 'unkown service' page (code 503). This procedure describes how to redirect the root page to the thredds page.
 
-* esgf-httpd-local.conf et esgf-httpd-local**s**.conf must exists in /etc/httpd/conf (see Annex).
+* esgf-httpd-local.conf et esgf-httpd-local**s**.conf must exist in /etc/httpd/conf (see Annex).
 * Decomment the following lines:
     - line 196 in /etc/httpd/conf/httpd.conf: `Include /etc/httpd/conf/esgf-httpd-local.conf`
     - line 33 in /etc/httpd/conf/httpd.**ssl**.conf: `Include /etc/httpd/conf/esgf-httpd-locals.conf`
