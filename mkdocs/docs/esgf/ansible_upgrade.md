@@ -122,10 +122,14 @@ cp -rp /esg/config /esg/config.bak
 
 Run these commands from the machine that holds your ESGF-Ansible repository.
 
+!!! warning
+    add --limit "data, index" when upgrading ESGF CDS nodes
+
 ```bash
 script ${PARENT_DIR}/esgf-ansible/upgrade.log # Keep a log of the upgrade.
 cd ${PARENT_DIR}/esgf-ansible
 git checkout ${TAG_VERSION}
+git status
 source activate ansible # See ESGF-Ansible installation.
 export ANSIBLE_NOCOLOR=true # Make the log readable.
 
