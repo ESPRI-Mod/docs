@@ -50,7 +50,7 @@ For running ESGF-Ansible:
 ### Settings
 
 !!! note
-    Custom and run these commands every time you execute the code of the procedure.
+    Custom and run these commands every time you execute the code of the procedure, from the machine which will run esgf-ansible. At the time of this writing, esgf-ansible is only installed on esgf-monitoring at ipsl.
     You must set the TAG_VERSION value at least.
 
 
@@ -71,6 +71,12 @@ Run the following command on the machine where the ESGF-Ansible repository lives
 # esgf-watch-dog@esgf-monitoring.ipsl.upmc.fr (a VM at IPSL).
 esgf ${GROUP} stop # This stops idp, index and data nodes of the specified group.
 ```
+
+#### Make a snapshot of the VM that will receive the upgrade
+
+This is fairly self-explanatory, as if the upgrade failed for some reason you can get back to the last snapshot.
+
+At IPSL, this is made through the vSphere interface.
 
 #### Data node
 
@@ -117,6 +123,39 @@ cp -rp /var/lib/globus/simple_ca /var/lib/globus/simple_ca.bak
 # ESGF configuration backup: 
 cp -rp /esg/config /esg/config.bak
 ```
+
+### Disable notifications from the nagios administration interface
+
+!!! warning
+    This step is optional
+
+If you have configured nagios alerts to warn you when a node is down or certain services are down, you will receive notifications during the upgrade because the node has to be shut down to upgrade. This can be prevented by disabling nagios notifications.
+
+Log into the nagios administration : https://nagios-ng.ipsl.upmc.fr/nagios/
+
+Then you can disable the tests such as : HTTP SSL certificate, HTTPS service, HTTP service.
+
+### Set globus_user and globus_pass
+
+At IPSL, GridFTP isn’t used on the ESGF machines anymore : it takes a lot of space and uses pretty much the entirety of the CPU. Hence, it’s on a separated, physical machine (not a virtual machine). This means that the globus services are not mandatory and should normally not be installed.
+
+The ESGF-Ansible doc says that if you disable the GridFTP steps at installation (like it’s done here), you don’t need to set values to the variables globus_user and globus_pass. This is a lie.
+
+However, you don’t need to assign real values, and for security reasons it’s recommended to set a bogus value instead :
+
+```bash
+cd ${PARENT_DIR}/esgf-ansible/host_vars/
+nano <host variables file for the host you want>
+```
+
+Then uncomment these lines and add any string you want at the end :
+
+```bash
+#globus_user:
+#globus_pass:
+```
+
+Then save and quit.
 
 ### Upgrade
 
