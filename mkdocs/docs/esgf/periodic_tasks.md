@@ -10,6 +10,9 @@ PERIODIC TASKS
 
 This document describes a set of tasks periodically executed on different systems.
 
+!!! note
+    All the scripts are versioned in the ESPRI-MOD' Subversion repository and located in esgf_admin_tools/trunk/scripts
+
 ### esgf-watch-dog@esgf-monitoring.ipsl.upmc.fr
 
 this system runs ESGF-Test-Suite tasks:
@@ -68,7 +71,7 @@ hermes-mq-daemons-start
 
 scripts/restart_hermes_mq_services.sh encapsulates these instructions and provides
 error handling mechanism (send an email if the script is not able to start up the 
-service)
+service). The script is executed from /etc/rc.local (specific to CentOS 6).
 
 - On web machines, services are started following these instructions:
 
@@ -79,4 +82,4 @@ hermes-web-daemon-start
 
 scripts/restart_hermes_web_services.sh encapsulates these instructions and provides
 error handling mechanism (send an email if the script is not able to start up the 
-service)
+service). The script is executed from /etc/rc.local (specific to CentOS 6).
