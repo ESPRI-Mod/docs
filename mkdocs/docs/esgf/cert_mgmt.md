@@ -43,7 +43,7 @@ For running ESGF-Ansible:
 
 ## Procedure
 
-### SSL certificate
+### Web/SSL certificate
 
 * Certificate request
 
@@ -51,7 +51,7 @@ Just ask to the IPSL' support for a SSL certificate renewing.
 
 * Certificate installation
 
-Follow the procedure describes in ESGF-Ansible wiki at this [page](https://esgf.github.io/esgf-ansible/usage/usage.html#local-certificate-installation).
+Follow the procedure describes in ESGF-Ansible wiki at this [page](https://esgf.github.io/esgf-ansible/usage/usage.html#web-certificate-installation).
 
 ### GridFTP/Myproxy certificate
 
