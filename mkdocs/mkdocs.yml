@@ -29,6 +29,8 @@ nav:
   - WPS pour projet Copernicus:
     - Installation: wps-copernicus/installation.md
     - Docker: wps-copernicus/docker.md
+  - SYNDA:
+      - Synda: synda/synda.md
 
 theme: 
   name: material 
