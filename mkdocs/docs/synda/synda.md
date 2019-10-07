@@ -1,4 +1,4 @@
-# ES-DOC Errata
+# Synda
 
 * Version: 0.0.1
 * Date: 29/07/2019
