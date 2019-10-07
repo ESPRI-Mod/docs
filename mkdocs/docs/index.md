@@ -29,7 +29,7 @@ pip install mkdocs mkdocs-extensions pymdown-extensions mkdocs-material pygments
 mkdocs serve
 ```
 
-* Open your favorite web browser at this address: [http://localhost:8000]()
+* Open your favorite web browser at this address: [http://localhost:8000](http://localhost:8000)
 
 ### Continuous Integration
 

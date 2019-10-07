@@ -6,6 +6,12 @@ nav:
     - ESGF-Ansible:
       - Installation: esgf/ansible_installation.md
       - Upgrade : esgf/ansible_upgrade.md
+      - Migration: esgf/migration_centos_7.md
+    - ESGF administration:
+      - Machine Setup : esgf/machine_setup.md
+      - Certificates Management : esgf/cert_mgmt.md
+      - Testing : esgf/testing.md
+      - Periodic Tasks: esgf/periodic_tasks.md
   - ES-DOC:
     - Errata:
       - Web Service: esdoc/errata/ws.md
@@ -20,6 +26,9 @@ nav:
     - Data Base: hermes/db.md
     - Message Broker: hermes/mq.md
     - Web Site: hermes/web.md
+  - WPS pour projet Copernicus:
+    - Installation: wps-copernicus/installation.md
+    - Docker: wps-copernicus/docker.md
 
 theme: 
   name: material 

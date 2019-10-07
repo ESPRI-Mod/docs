@@ -1,7 +1,7 @@
 ESGF-Ansible Installation
 =========================
 
-* Version: 0.0.1
+* Version: 0.0.2
 * Date: 15/07/2019
 * Authors: Sébastien Gardoll
 * Keywords: esgf ansible installation
@@ -77,11 +77,13 @@ pip install ansible
 
 ### Installation of ESGF-Ansible
 
-```bash
+Change the highlighted value.
+
+```bash hl_lines="4"
 PARENT_DIR="${HOME}"
 cd "${PARENT_DIR}"
 
-TAG_NAME='4.0.4'
+TAG_NAME='XXX'
 git clone https://github.com/ESGF/esgf-ansible.git && cd esgf-ansible && git checkout $TAG_NAME
 ```
 
@@ -106,4 +108,10 @@ cd "${PARENT_DIR}/esgf-ansible"
 git pull
 git checkout ${TAG_NAME}
 
+```
+
+### Login
+
+```bash
+ssh esgf-watch-dog@esgf-monitoring.ipsl.upmc.fr
 ```
