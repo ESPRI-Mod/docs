@@ -12,6 +12,7 @@ nav:
       - Certificates Management : esgf/cert_mgmt.md
       - Testing : esgf/testing.md
       - Periodic Tasks: esgf/periodic_tasks.md
+      - Troubleshooting: esgf/troubleshooting.md
   - ES-DOC:
     - Errata:
       - Web Service: esdoc/errata/ws.md
