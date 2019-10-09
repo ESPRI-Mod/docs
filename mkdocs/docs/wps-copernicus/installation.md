@@ -123,7 +123,21 @@ systemctl start docker
 
 #### Test with Vagrant
 
-**FIXME**
+There is a premade Vagrantfile in the directory `ansible-wps-playbook`. You need to use a special configuration file for that, found in `etc/custom-vagrant.yml`. 
+
+It’s recommended to test on a normal user instead of root.
+
+Here is how you use the playbook :
+
+```bash
+cd ansible-wps-playbook
+rm custom.yml
+ln -s etc/custom-vagrant.yml custom.yml
+
+vagrant up
+vagrant provision```
+
+You should see a playbook running on the provision step.
 
 #### Check the configuration
 
