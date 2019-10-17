@@ -8,7 +8,7 @@ MIGRATION FROM CENTOS 6 to 7
 
 ## Description
 
-This procedure describes how to migrate a ESGF node 4.0.4 from CentOS 6 to CentOS 7.
+This procedure describes how to migrate a ESGF node 4.0.4 from CentOS 6 to CentOS 7. It includes backups and how to restore them.
 
 Some definitions:
 
