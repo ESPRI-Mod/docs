@@ -56,6 +56,19 @@ Log the process activity on the system.
 
 This script computes some basic statistics about ESGF data node.
 
+### esgf-node.ipsl.upmc.fr
+
+There is one script that runs every full hour to restart solr if it dies. It’s on the root crontab on esgf-node :
+
+```cron
+# m    h    dom  mon  dow   command
+  0   *     *    *    *    python /root/scripts/restart-died-solr.py
+```
+
+This script doesn’t do anything if solr works correctly.
+
+It was written by Alan Iwi, and the github is here : https://gist.github.com/alaniwi/a8f1f6943729b63377311c71947b0e9d
+
 ### Hermes machines
 
 On Hermes machines, some of the hermes'services are started, at boot, with special care.
