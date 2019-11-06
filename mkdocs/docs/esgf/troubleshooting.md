@@ -31,4 +31,10 @@ Unable to start service httpd: Job for httpd.service failed because the control 
 
 These errors are caused by a bad configuration of httpd. In this case, you can look at your httpd configuration on older machines, or use the config present at IPSL. As an example, you can find out how we edit configuration at [Ansible upgrade](ansible_upgrade.md).
 
+## While ESGF is running
 
+### On data nodes
+
+* Thredds stopping
+
+You might encounter an error while querying your netcdf files, where the data node doesn’t respond. In this case, you should use an esgf command to restart the data node.
