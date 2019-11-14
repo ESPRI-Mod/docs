@@ -5,6 +5,7 @@ nav:
   - ESGF: 
     - ESGF-Ansible:
       - Installation: esgf/ansible_installation.md
+      - Fresh install without backups: esgf/fresh_install_data_node.md
       - Upgrade : esgf/ansible_upgrade.md
       - Migration: esgf/migration_centos_7.md
     - ESGF administration:
@@ -13,6 +14,7 @@ nav:
       - Testing : esgf/testing.md
       - Periodic Tasks: esgf/periodic_tasks.md
       - Troubleshooting: esgf/troubleshooting.md
+      - In case of power cuts and more: esgf/maintenance_cases.md
   - ES-DOC:
     - Errata:
       - Web Service: esdoc/errata/ws.md
