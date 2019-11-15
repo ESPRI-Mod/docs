@@ -20,15 +20,13 @@ This procedure describes how to install ESGF-Ansible and its dependencies.
 
 ### Hosts
 
-esgf-monitoring.ipsl.upmc.fr, or any machine that you use to monitor the ansible installations from. It can also be your personal machine.
+If you install locally, you will not need any additional host and you can just log in *as root* on your node. If you install remotely, any linux machine will do.
 
 ### Access
 
 Adapt this to your choice of a machine. It goes without saying that you need root access on the machine you want to install your data node on.
 
-* Protocol: ssh
-* Login: esgf-watch-dog
-* Command: ssh esgf-watch-dog@esgf-monitoring.ipsl.upmc.fr
+If you want to install from a local machine, you can do it too, using your usual procedure.
 
 ## Environment
 
@@ -49,7 +47,7 @@ You will need an inventory file, that specifies at least your data node and the 
 
 Create ar inventory file, and fill it :
 
-```bash
+```bash 
 PARENT_DIR="${HOME}"
 cd "${PARENT_DIR}"
 mkdir -p inventory
@@ -58,7 +56,7 @@ nano inventory/hosts
 
 The file should look like this :
 
-```bash
+```bash hl_lines="2"
 [data]
 [FQN of your data node]
 
@@ -133,7 +131,7 @@ Running the status recipe of ESGF-Ansible is also a good starting point.
 
 ### Maintenance
 
-ESGF-Ansible new releases are exported as Git tags. New release are easily installed as pulling and checkouting the related tag. That's it !
+ESGF-Ansible new releases are exported as Git tags. New release are easily installed as pulling and checking out the related tag. That's it !
 
 For example, this code install the release 4.0.4
 
@@ -146,8 +144,3 @@ git checkout ${TAG_NAME}
 
 ```
 
-### Login
-
-```bash
-ssh esgf-watch-dog@esgf-monitoring.ipsl.upmc.fr
-```
