@@ -15,6 +15,8 @@ nav:
       - Periodic Tasks: esgf/periodic_tasks.md
       - Troubleshooting: esgf/troubleshooting.md
       - In case of power cuts and more: esgf/maintenance_cases.md
+    - ESGF-Docker:
+      - Installation via Docker: esgf/docker_installation.md
   - ES-DOC:
     - Errata:
       - Web Service: esdoc/errata/ws.md
