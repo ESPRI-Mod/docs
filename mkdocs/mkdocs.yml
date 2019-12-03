@@ -33,6 +33,7 @@ nav:
     - Web Site: hermes/web.md
   - WPS pour projet Copernicus:
     - Installation: wps-copernicus/installation.md
+    - Usage of birdy to fetch datasests: wps-copernicus/fetch_models.md
     - Docker: wps-copernicus/docker.md
   - SYNDA:
       - Synda: synda/synda.md
