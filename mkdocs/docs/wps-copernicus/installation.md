@@ -112,15 +112,6 @@ emu.hello(name='Birdy').get()[0]
 
 If you don’t see any error and the hello is returning a value, that means your WPS is running.
 
-#### Run the WPS
-
-You will need docker on your machine, as the wps uses a docker container :
-
-```bash
-yum -y install docker
-systemctl start docker 
-```
-
 #### Test with Vagrant
 
 There is a premade Vagrantfile in the directory `ansible-wps-playbook`. You need to use a special configuration file for that, found in `etc/custom-vagrant.yml`. 
