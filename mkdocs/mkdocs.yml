@@ -15,6 +15,7 @@ nav:
       - Periodic Tasks: esgf/periodic_tasks.md
       - Troubleshooting: esgf/troubleshooting.md
       - In case of power cuts and more: esgf/maintenance_cases.md
+      - What to do when rebooting machines: esgf/how_to_reboot.md
     - ESGF-Docker:
       - Installation via Docker: esgf/docker_installation.md
   - ES-DOC:
