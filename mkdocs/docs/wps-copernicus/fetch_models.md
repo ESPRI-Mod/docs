@@ -48,7 +48,8 @@ Here are a few examples of how to use birdy that you can reproduce on your own c
 
 ```py
 from birdy import WPSClient
-emu = WPSClient(url='http://copernicus-wps.ipsl.upmc.fr/wps')
+emu = WPSClient(url='http://copernicus-wps.ipsl.upmc.fr/wps') # to access the WPS at IPSL specifically
+emu = WPSClient(url='http://compute.mips.copernicus-climate.eu/wps') # to access the load balanced WPS
 emu.hello(name='Birdy').get()[0]
 ```
 
@@ -61,6 +62,7 @@ First, activate birdy and define the WPS you want to reach :
 ```bash
 conda activate birdy
 export WPS_SERVICE=http://copernicus-wps.ipsl.upmc.fr/wps
+export WPS_SERVICE=http://compute.mips.copernicus-climate.eu/wps # to access the load balanced service
 ```
 
 Then you can make sure that it works :
