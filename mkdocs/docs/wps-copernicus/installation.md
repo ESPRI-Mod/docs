@@ -43,7 +43,7 @@ You need to make sure that you use a port that is opened on the remote machine. 
 
 ```bash
 cd ansible-wps-playbook
-vim myhosts.cfg
+vim myhost.cfg
 ```
 
 Here is an example of how the file could look like :
