@@ -1,7 +1,7 @@
 Certificates Management
 =======================
 
-* Version: 0.0.1
+* Version: 0.0.2
 * Date: 28/08/2019
 * Authors: Sébastien Gardoll
 * Keywords: certificate installation ssl ca myproxy globus apache esgf
@@ -69,8 +69,7 @@ Issue these commands so as to generate the CSR file(s):
 if the node is an IDP:
 ```bash
 esgf_host="$(hostname)"
-openssl req -new -nodes -config /etc/certs/openssl.cnf -keyout /etc/esgfcerts/cakey.pem -out /etc/esgfcerts/cacert_req.csr \
--subj "/O=ESGF/OU=ESGF.ORG/CN=$esgf_host-CA"
+openssl req -new -nodes -config /root/certs/certs/openssl.cnf -keyout /root/certs/esgfcerts/cakey.pem -out /root/certs/esgfcerts/cacert_req.csr -subj "/O=ESGF/OU=ESGF.ORG/CN=$esgf_host-CA"
 ```
 
 for any kind of node (including IDP node):
