@@ -47,7 +47,7 @@ For running ESGF-Ansible:
 
 * Certificate request
 
-Just ask to the IPSL' support for a SSL certificate renewing.
+Just ask to the IPSL support for a SSL certificate renewing.
 
 * Certificate installation
 
@@ -93,7 +93,76 @@ scp `hostname`_csr_files.tgz YOUR_ACCOUNT@YOUR_MACHINE:.
 
 * Certificate installation
 
-Follow the procedure describes in the ESGF-Ansible wiki at this [page](https://esgf.github.io/esgf-ansible/usage/usage.html#local-certificate-installation).
+When the certificates are expiring, after requesting a signature from the ESGF admins, you will receive an archive containing at least the following files :
+
+* hostcert.pem
+* cacert.pem
+* cachain.pem
+* globus_simple_ca[…].tgz
+
+The name of the globus_simple_ca archive can vary. In our example it was `globus_simple_ca_85bc937c_setup-0.tar.gz`.
+
+These files need to copied *on the node*. We will launch a playbook on esgf-monitoring, but the playbook itself doesn’t make any remote copy : it copies from the node to other places on the node, then launches a few programs.
+
+The place where you want to copy them depends on where you specified the paths in your config file. On esgf-monitoring, the config files are placed in the directory `/home/esgf-watch-dog/scripts/esgf-ansible/host_vars`.
+
+In our case, the relevant variables in our config are as follows, for esgf-node :
+
+```yaml
+ansible_user: root
+[…]
+globushostcert: /etc/grid-security/hostcert.pem
+globushostkey: /etc/grid-security/hostkey.pem
+[…]
+myproxycacert: /etc/esgfcerts/cacert.pem
+myproxycakey: /etc/esgfcerts/cakey.pem
+myproxy_signing_policy: /etc/esgfcerts/globus_simple_ca_85bc937c_setup-0/85bc937c.signing_policy
+[…]
+hostkey_src: /etc/esgfcerts/hostkey.pem
+hostcert_src: /etc/esgfcerts/hostcert.pem
+cachain_src: /etc/esgfcerts/cachain.pem
+[…]
+```
+
+And for vesg :
+
+```yaml
+[…]
+globushostcert: /etc/grid-security/hostcert.pem
+globushostkey: /etc/grid-security/hostkey.pem
+[…]
+hostkey_src: /etc/esgfcerts/hostkey.pem
+hostcert_src: /etc/esgfcerts/hostcert.pem
+cachain_src: /etc/esgfcerts/cachain.pem
+[…]
+```
+
+Here are what each of these files represent :
+
+* hostcert.pem and hostkey.pem are the public/private key pair for the globus certificate
+* cacert.pem and cakey.pem are the public/private key pair for the myproxy certificate
+* cachain is the certificate chain.
+
+You need to install the files in the corresponding paths on the respective nodes. Be sure to have the private key copied as well ; you can copy it from somewhere on your node.
+
+If need be, you can check that both of the pairs correspond to the same pairing using these commands :
+
+```bash
+openssl x509 -noout -modulus -in certificate.pem | openssl md5
+openssl rsa -noout -modulus -in certificatekey.pem | openssl md5
+```
+
+These 2 commands should return the same output.
+
+After that, you can run the playbook on esgf-monitoring, as per [the ESGF-Ansible wiki](https://esgf.github.io/esgf-ansible/usage/usage.html#local-certificate-installation).
+
+Here is an example of the commands you can run on esgf-monitoring :
+
+```bash
+cd esgf-ansible
+script local_certs_install.log
+ansible-playbook -v -i /home/esgf-watch-dog/scripts/esgf-ansible/hosts.prod local_certs.yml
+```
 
 ### Login
 
