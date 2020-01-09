@@ -124,7 +124,7 @@ cachain_src: /etc/esgfcerts/cachain.pem
 […]
 ```
 
-And for vesg :
+And for vesg and vesg-x :
 
 ```yaml
 […]
@@ -161,7 +161,8 @@ Here is an example of the commands you can run on esgf-monitoring :
 ```bash
 cd esgf-ansible
 script local_certs_install.log
-ansible-playbook -v -i /home/esgf-watch-dog/scripts/esgf-ansible/hosts.prod local_certs.yml
+ansible-playbook -v -i /home/esgf-watch-dog/scripts/esgf-ansible/hosts.prod local_certs.yml # for the IPSL data node
+ansible-playbook -v -i /home/esgf-watch-dog/scripts/esgf-ansible/hosts.x local_certs.yml # for the data node of Polytechnique
 ```
 
 ### Login
