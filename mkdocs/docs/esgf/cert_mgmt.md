@@ -1,9 +1,9 @@
 Certificates Management
 =======================
 
-* Version: 0.0.2
-* Date: 28/08/2019
-* Authors: Sébastien Gardoll
+* Version: 0.0.3
+* Date: 30/01/2020
+* Authors: Sébastien Gardoll, Pierre Logerais
 * Keywords: certificate installation ssl ca myproxy globus apache esgf
 
 ## Description
@@ -21,6 +21,8 @@ gives the link of their installation procedure.
 ### Hosts
 
 Any host that runs an ESGF node.
+
+A machine that runs a GridFTP server, in case they are separated (it’s the case at IPSL).
 
 ### Access
 
@@ -80,10 +82,26 @@ openssl req -new -nodes -config /etc/certs/openssl.cnf -keyout /etc/esgfcerts/ho
 -subj "/O=ESGF/OU=ESGF.ORG/CN=$esgf_host"
 ```
 
+For the GridFTP machine : 
+
+```bash
+esgf_host="$(hostname)"
+rm -fr /root/certs_bak/*
+cp /etc/grid-security/hostcert.pem /root/certs_bak/
+cp /etc/grid-security/hostkey.pem /root/certs_bak/
+mkdir -p /root/certs_bak/globus_connect_server/
+cp /var/lib/globus-connect-server/grid-security/hostcert.pem /root/certs_bak/globus_connect_server/
+cp /var/lib/globus-connect-server/grid-security/hostkey.pem /root/certs_bak/globus_connect_server/
+mkdir -p /root/certs/
+openssl req -new -nodes -config /etc/pki/tls/openssl.cnf -keyout /root/certs_bak/hostkey.pem -out /root/certs/hostcert_req.csr -subj "/O=ESGF/OU=ESGF.ORG/CN=$esgf_host"
+```
+
 Then, send the csr file(s) to the ESGF certificate signing authority.
 
 !!! warning
     Never get a private key out of its host.
+
+For ESGF nodes :
 
 ```bash
 cd /etc/esgfcerts/
@@ -91,7 +109,62 @@ tar -czvf `hostname`_csr_files.tgz *.csr
 scp `hostname`_csr_files.tgz YOUR_ACCOUNT@YOUR_MACHINE:.
 ```
 
+For the GridFTP machine :
+```bash
+cd /root/certs/
+tar -czvf `hostname`_csr_files.tgz *.csr
+scp `hostname`_csr_files.tgz YOUR_ACCOUNT@YOUR_MACHINE:.
+```
+
 * Certificate installation
+
+#### GridFTP machine
+
+You should receive an archive containing the following files :
+
+* cachain.pem
+* hostcert.pem
+* hostcert_req.csr
+
+Extract these to `/root/certs` on the GridFTP machine :
+
+```bash
+scp YOUR_ACCOUNT@YOUR_MACHINE:/path/to/certificate/archive.tgz /root/certs/
+cd /root/certs
+tar xvzf archive.tgz
+```
+
+Replace `archive.tgz` with the name of your certificates archive.
+
+Check that the key and certificate match correctly :
+
+```bash
+openssl x509 -noout -modulus -in /root/certs/hostcert.pem | openssl md5
+openssl rsa -noout -modulus -in /root/certs_bak/hostkey.pem | openssl md5
+```
+
+If that’s the case, simply copy the certificates where needed :
+
+```bash
+cp /root/certs_bak/hostkey.pem /root/certs
+cd /root/certs
+cp hostcert.pem /var/lib/globus-connect-server/grid-security/
+cp hostkey.pem /var/lib/globus-connect-server/grid-security/
+cp hostcert.pem /etc/grid-security/
+cp hostkey.pem /etc/grid-security/
+```
+
+Then restart GridFTP :
+
+```bash
+service globus-gridftp-server restart
+```
+
+!!! warning
+    Run the esgf-test-suite from esgf-monitoring and be sure that dl_gridftp returns no error.
+
+
+#### ESGF nodes
 
 When the certificates are expiring, after requesting a signature from the ESGF admins, you will receive an archive containing at least the following files :
 
