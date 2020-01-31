@@ -32,6 +32,7 @@ nav:
     - Data Base: hermes/db.md
     - Message Broker: hermes/mq.md
     - Web Site: hermes/web.md
+    - Maintenance: hermes/maintenance.md
   - WPS pour projet Copernicus:
     - Installation: wps-copernicus/installation.md
     - Usage of birdy to fetch datasests: wps-copernicus/fetch_models.md
