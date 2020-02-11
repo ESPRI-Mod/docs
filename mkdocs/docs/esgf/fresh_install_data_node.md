@@ -77,6 +77,7 @@ esgf-node.ipsl.upmc.fr
 
 ```bash
 PARENT_DIR="${HOME}"
+export HOST_NAME="data"
 mkdir -p "${PARENT_DIR}/tmp"
 cd "${PARENT_DIR}/tmp"
 
