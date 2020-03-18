@@ -234,6 +234,8 @@ Here is an example of the commands you can run on esgf-monitoring :
 ```bash
 cd esgf-ansible
 script local_certs_install.log
+source activate ansible
+export ANSIBLE_NOCOLOR=true
 ansible-playbook -v -i /home/esgf-watch-dog/scripts/esgf-ansible/hosts.prod local_certs.yml # for the IPSL data node
 ansible-playbook -v -i /home/esgf-watch-dog/scripts/esgf-ansible/hosts.x local_certs.yml # for the data node of Polytechnique
 ```
