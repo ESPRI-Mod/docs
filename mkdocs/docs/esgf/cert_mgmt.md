@@ -227,6 +227,20 @@ openssl rsa -noout -modulus -in certificatekey.pem | openssl md5
 
 These 2 commands should return the same output.
 
+By convention, the following folders are used for certificates :
+
+On index nodes :
+
+* `/etc/grid-security` contains myproxy certificates
+* `/etc/esgfcerts` contains ESGF certificates
+* anything in /root/certs is a backup
+
+On data nodes :
+
+* `/etc/grid-security` contains myproxy certificates
+* `/etc/esgfcerts` contains ESGF certificates
+* anything in /root/certs is a backup
+
 After that, you can run the playbook on esgf-monitoring, as per [the ESGF-Ansible wiki](https://esgf.github.io/esgf-ansible/usage/usage.html#local-certificate-installation).
 
 Here is an example of the commands you can run on esgf-monitoring :
