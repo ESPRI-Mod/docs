@@ -37,6 +37,7 @@ nav:
     - Installation: wps-copernicus/installation.md
     - Usage of birdy to fetch datasests: wps-copernicus/fetch_models.md
     - Docker: wps-copernicus/docker.md
+    - Maintenance: wps-copernicus/maintenance.md
   - SYNDA:
       - Synda: synda/synda.md
 
