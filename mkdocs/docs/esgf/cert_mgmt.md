@@ -233,12 +233,14 @@ On index nodes :
 
 * `/etc/grid-security` contains myproxy certificates
 * `/etc/esgfcerts` contains ESGF certificates
+* `/etc/certs` contains httpd certificates
 * anything in /root/certs is a backup
 
 On data nodes :
 
 * `/etc/grid-security` contains myproxy certificates
 * `/etc/esgfcerts` contains ESGF certificates
+* `/etc/certs` contains httpd certificates
 * anything in /root/certs is a backup
 
 After that, you can run the playbook on esgf-monitoring, as per [the ESGF-Ansible wiki](https://esgf.github.io/esgf-ansible/usage/usage.html#local-certificate-installation).
