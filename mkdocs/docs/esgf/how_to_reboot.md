@@ -65,4 +65,13 @@ There is no particular precaution here, but before restarting the nodes you shou
 
 ## copernicus-wps (/cmip-wps)
 
-When restarting the machine, you should also rerun the `ansible-wps-playbook`.
+You don’t need to do any specific action when rebooting the machine.
+
+## Perfsonar/Perfsonar-hpc
+
+You don’t need to do any specific action when rebooting the machine.
+
+## esgf-build
+
+All the services on the machine are started automatically at boot, so you don’t need to do any specific action after rebooting.
+
