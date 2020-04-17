@@ -107,3 +107,9 @@ esgf dev start
 
 * Turn on the cron jobs again for esgf-test-suite
 * Turn on notifications from nagios again
+
+### In case of an overcharged production node
+
+If RAM is almost fully used (like 90% or more) on the index node, it means that there are a lot of requests. It’s not necessarily bad, but you should always check that the `/prodigfs` filesystem is mounted and responding, by accessing subdirectories in `/prodigfs`. If it’s available, then you should wait and see, and if the problem doesn’t subside by itself, restart the node during the evening or the night.
+
+If the data node is overcharged, it means that there are lots of downloads. If the load average is very high, it means that there are lots of pending downloads and it could be an issue with the mounted filesystems on `/prodigfs`. Again, you should check it by accessing subdirectories in `/prodigfs`. If the mounted filesystems are responding just fine, keep an eye out and restart only during the evening or the night.
