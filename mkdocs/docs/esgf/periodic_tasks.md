@@ -25,6 +25,8 @@ this system runs ESGF-Test-Suite tasks:
 
 ### vesg.ipsl.upmc.fr
 
+!!! warning
+    Periodic tasks on this machine are currently disabled.
 
 This system runs two cron tasks:
 
