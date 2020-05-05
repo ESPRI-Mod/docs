@@ -65,3 +65,50 @@ We solved the problem by removing the contents of the `__pycache__` directory at
 ```
 
 This solved our problems.
+
+* esgf-test-suite no longer passes for an obscure reason and takes a very long time to execute
+
+If the test-suite takes 20+ minutes for no reason, but there doesn’t appear to be any problem with the node itself, it might be due to a problem with many instances of the test-suite running. They slow each other down drastically.
+
+Run `glances` and `nload` on both the data and index node to be sure that the problem isn’t an overloaded machine.
+
+If this isn’t the case, you can see the test-suites running with the commands :
+
+```ps aux | grep test-suite
+ps aux | grep python3```
+
+If there are multiple instances of the test-suite running, you could see an output like this one :
+
+```(base) [esgf-watch-dog@esgf-monitoring ~]$ ps aux | grep test-suite
+esgf-wa+  2419  0.0  0.0 112832   972 pts/0    S+   15:45   0:00 grep --color=auto test-suite
+esgf-wa+ 21030  0.0  0.0 113284     0 ?        Ss   09:00   0:00 /bin/sh -c /home/esgf-watch-dog/scripts/script_bootstrap.sh '[ESGF-TEST-SUITE] prod'   'glipsl@ipsl.fr,plogerais@ipsl.fr' '/home/esgf-watch-dog/scripts/check_esgf-test-suite.sh' '/home/esgf-watch-dog/test-suite_config_files/my_config_prod.ini -a !compute,!cog_create_user' 2>&1 | /usr/bin/logger -t '[ESGF-TEST-SUITE] prod'
+esgf-wa+ 21032  0.0  0.0 113284    36 ?        S    09:00   0:00 /bin/bash /home/esgf-watch-dog/scripts/script_bootstrap.sh [ESGF-TEST-SUITE] prod glipsl@ipsl.fr,plogerais@ipsl.fr /home/esgf-watch-dog/scripts/check_esgf-test-suite.sh /home/esgf-watch-dog/test-suite_config_files/my_config_prod.ini -a !compute,!cog_create_user
+esgf-wa+ 21043  0.0  0.0 113284    12 ?        S    09:00   0:00 /bin/bash /home/esgf-watch-dog/scripts/script_bootstrap.sh [ESGF-TEST-SUITE] prod glipsl@ipsl.fr,plogerais@ipsl.fr /home/esgf-watch-dog/scripts/check_esgf-test-suite.sh /home/esgf-watch-dog/test-suite_config_files/my_config_prod.ini -a !compute,!cog_create_user
+esgf-wa+ 21044  0.0  0.0 113288    36 ?        S    09:00   0:00 /bin/bash /home/esgf-watch-dog/scripts/check_esgf-test-suite.sh /home/esgf-watch-dog/test-suite_config_files/my_config_prod.ini -a !compute,!cog_create_user
+esgf-wa+ 21045  0.0  6.6 1047036 258796 ?      Sl   09:00   0:16 python3 esgf-test.py -v --nocapture --nologcapture --tc-file /home/esgf-watch-dog/test-suite_config_files/my_config_prod.ini -a !compute,!cog_create_user
+esgf-wa+ 21320  0.0  6.9 1047036 269316 ?      Sl   09:01   0:01 python3 esgf-test.py -v --nocapture --nologcapture --tc-file /home/esgf-watch-dog/test-suite_config_files/my_config_prod.ini -a !compute,!cog_create_user
+esgf-wa+ 21321  0.0  6.9 973304 269252 ?       S    09:01   0:00 python3 esgf-test.py -v --nocapture --nologcapture --tc-file /home/esgf-watch-dog/test-suite_config_files/my_config_prod.ini -a !compute,!cog_create_user
+esgf-wa+ 24755  0.0  0.0 113284   180 ?        Ss   11:00   0:00 /bin/sh -c /home/esgf-watch-dog/scripts/script_bootstrap.sh '[ESGF-TEST-SUITE] prod'   'glipsl@ipsl.fr,plogerais@ipsl.fr' '/home/esgf-watch-dog/scripts/check_esgf-test-suite.sh' '/home/esgf-watch-dog/test-suite_config_files/my_config_prod.ini -a !compute,!cog_create_user' 2>&1 | /usr/bin/logger -t '[ESGF-TEST-SUITE] prod'
+esgf-wa+ 24756  0.0  0.0 113284   252 ?        S    11:00   0:00 /bin/bash /home/esgf-watch-dog/scripts/script_bootstrap.sh [ESGF-TEST-SUITE] prod glipsl@ipsl.fr,plogerais@ipsl.fr /home/esgf-watch-dog/scripts/check_esgf-test-suite.sh /home/esgf-watch-dog/test-suite_config_files/my_config_prod.ini -a !compute,!cog_create_user
+esgf-wa+ 24768  0.0  0.0 113284   256 ?        S    11:00   0:00 /bin/bash /home/esgf-watch-dog/scripts/script_bootstrap.sh [ESGF-TEST-SUITE] prod glipsl@ipsl.fr,plogerais@ipsl.fr /home/esgf-watch-dog/scripts/check_esgf-test-suite.sh /home/esgf-watch-dog/test-suite_config_files/my_config_prod.ini -a !compute,!cog_create_user
+esgf-wa+ 24769  0.0  0.0 113288   228 ?        S    11:00   0:00 /bin/bash /home/esgf-watch-dog/scripts/check_esgf-test-suite.sh /home/esgf-watch-dog/test-suite_config_files/my_config_prod.ini -a !compute,!cog_create_user
+esgf-wa+ 24770  0.0 20.9 1047700 814036 ?      Sl   11:00   0:15 python3 esgf-test.py -v --nocapture --nologcapture --tc-file /home/esgf-watch-dog/test-suite_config_files/my_config_prod.ini -a !compute,!cog_create_user
+esgf-wa+ 25426  0.0 21.0 973968 818340 ?       S    11:20   0:00 python3 esgf-test.py -v --nocapture --nologcapture --tc-file /home/esgf-watch-dog/test-suite_config_files/my_config_prod.ini -a !compute,!cog_create_user
+esgf-wa+ 25427  0.0 21.0 973968 818496 ?       S    11:20   0:00 python3 esgf-test.py -v --nocapture --nologcapture --tc-file /home/esgf-watch-dog/test-suite_config_files/my_config_prod.ini -a !compute,!cog_create_user
+esgf-wa+ 26241  0.0  0.0 113284   180 ?        Ss   12:00   0:00 /bin/sh -c /home/esgf-watch-dog/scripts/script_bootstrap.sh '[ESGF-TEST-SUITE] prod'   'glipsl@ipsl.fr,plogerais@ipsl.fr' '/home/esgf-watch-dog/scripts/check_esgf-test-suite.sh' '/home/esgf-watch-dog/test-suite_config_files/my_config_prod.ini -a !compute,!cog_create_user' 2>&1 | /usr/bin/logger -t '[ESGF-TEST-SUITE] prod'
+esgf-wa+ 26242  0.0  0.0 113284   240 ?        S    12:00   0:00 /bin/bash /home/esgf-watch-dog/scripts/script_bootstrap.sh [ESGF-TEST-SUITE] prod glipsl@ipsl.fr,plogerais@ipsl.fr /home/esgf-watch-dog/scripts/check_esgf-test-suite.sh /home/esgf-watch-dog/test-suite_config_files/my_config_prod.ini -a !compute,!cog_create_user
+esgf-wa+ 26253  0.0  0.0 113284   256 ?        S    12:00   0:00 /bin/bash /home/esgf-watch-dog/scripts/script_bootstrap.sh [ESGF-TEST-SUITE] prod glipsl@ipsl.fr,plogerais@ipsl.fr /home/esgf-watch-dog/scripts/check_esgf-test-suite.sh /home/esgf-watch-dog/test-suite_config_files/my_config_prod.ini -a !compute,!cog_create_user
+esgf-wa+ 26254  0.0  0.0 113288   232 ?        S    12:00   0:00 /bin/bash /home/esgf-watch-dog/scripts/check_esgf-test-suite.sh /home/esgf-watch-dog/test-suite_config_files/my_config_prod.ini -a !compute,!cog_create_user
+esgf-wa+ 26255  0.1 21.2 1045856 826072 ?      Sl   12:00   0:20 python3 esgf-test.py -v --nocapture --nologcapture --tc-file /home/esgf-watch-dog/test-suite_config_files/my_config_prod.ini -a !compute,!cog_create_user
+esgf-wa+ 26884  0.0 21.3 972124 828144 ?       S    12:20   0:00 python3 esgf-test.py -v --nocapture --nologcapture --tc-file /home/esgf-watch-dog/test-suite_config_files/my_config_prod.ini -a !compute,!cog_create_user
+esgf-wa+ 26885  0.0 21.3 972124 828144 ?       S    12:20   0:00 python3 esgf-test.py -v --nocapture --nologcapture --tc-file /home/esgf-watch-dog/test-suite_config_files/my_config_prod.ini -a !compute,!cog_create_user
+(base) [esgf-watch-dog@esgf-monitoring ~]$ ```
+
+In that case, either reboot `esgf-monitoring` or run :
+
+```killall check_esgf-test-suite.sh
+killall python3```
+
+The killed test-suite instances will still send an empty error e-mail, but it’s nothing to worry about.
+
+Rerun the test-suite afterwards to be sure that everything is fine.
