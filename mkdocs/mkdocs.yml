@@ -14,6 +14,7 @@ nav:
       - Testing : esgf/testing.md
       - Periodic Tasks: esgf/periodic_tasks.md
       - Troubleshooting: esgf/troubleshooting.md
+      - Monitoring: esgf/esgf_monitoring.md
       - In case of power cuts and more: esgf/maintenance_cases.md
       - What to do when rebooting machines: esgf/how_to_reboot.md
     - ESGF-Docker:
