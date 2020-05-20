@@ -89,7 +89,3 @@ iptables -A INPUT -i ens160 -m state --state NEW -s 159.226.234.13 -j REJECT --r
 ```
 
 After saving the iptables rules and restarting the node, everything worked fine.
-
-* Example of shards that we needed to restart
-
-
