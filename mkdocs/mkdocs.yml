@@ -19,6 +19,8 @@ nav:
       - What to do when rebooting machines: esgf/how_to_reboot.md
     - ESGF-Docker:
       - Installation via Docker: esgf/docker_installation.md
+  - Thredds:
+    - Machine setup: thredds/machine_setup.md
   - ES-DOC:
     - Errata:
       - Web Service: esdoc/errata/ws.md
