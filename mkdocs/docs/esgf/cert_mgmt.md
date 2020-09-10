@@ -2,7 +2,7 @@ Certificates Management
 =======================
 
 * Version: 0.0.3
-* Date: 30/01/2020
+* Date: 10/09/2020
 * Authors: Sébastien Gardoll, Pierre Logerais
 * Keywords: certificate installation ssl ca myproxy globus apache esgf
 
@@ -62,19 +62,38 @@ Follow the procedure describes in ESGF-Ansible wiki at this [page](https://esgf.
 !!! note
     All the following instructions should be, or are, automated thanks to ESGF-Ansible. Hence, they may become obsolete in the future.
 
-!!! warning
-    The following instructions are not tested.
+#### Introduction to MyProxy/GridFTP and how it works
+
+GridFTP is a protocol that lets you download files very efficiently. It’s hosted on gridftp.ipsl.upmc.fr.
+
+To authentificate and let users download, we also use a MyProxy server. This is hosted on esgf-node.ipsl.upmc.fr.
+
+The services work as follows :
+
+The user does a TLS handshake, and he is validated by the Certificate Authority (cacert.pem) on esgf-node.ipsl.upmc.fr (so far, gridftp isn’t touched)
+The user then sends his password to the authentication system, also on esgf-node.
+The MyProxy server checks that the user is authenticated correctly, and if it’s the case, MyProxy sends a certificate that is validated by the certificate (cacert.pem) on esgf-node. This certificate lasts for a few days, and lets the user authenticate directly in GridFTP.
+
+Here is what each file does :
+
+- cacert.pem (on esgf-node and gridftp) is the Certificate Authority. It’s used to authenticate users.
+- hostcert.pem (on esgf-node) is the Host certificate on the ESGF node. It’s used to validate the ESGF node and it’s signed by ESGF certificate authorities.
+- hostcert.pem (on gridftp) is the Host certficate for gridftp. It’s used to validate the gridftp downloads, when a user requests it.
+- cachain.pem (on gridftp and esgf-node) is the certificate chain, which lets us validate the gridftp and esgf-node machines. This is a certificate that isn’t specific to our machine, so we don’t need to request it.
+
+When renewing GridFTP certificates, all of these should be renewed. You only need to issue a hostcert certificate request for hostcert and cacert, since cachain is not our certificate.
+
+Further explanations can be found here : https://www.academia.edu/18040769/Instant_GridFTP
 
 Issue these commands so as to generate the CSR file(s):
 
-
-if the node is an IDP:
+Generate the CA certificate request on esgf-node (it’s the IDP node, so the node which hosts the MyProxy server) :
 ```bash
 esgf_host="$(hostname)"
 openssl req -new -nodes -config /root/certs/certs/openssl.cnf -keyout /root/certs/esgfcerts/cakey.pem -out /root/certs/esgfcerts/cacert_req.csr -subj "/O=ESGF/OU=ESGF.ORG/CN=$esgf_host-CA"
 ```
 
-for any kind of node (including IDP node):
+Generate the hostcert certificate request on *both* esgf-node and gridftp :
 
 ```bash
 esgf_host="$(hostname)"
@@ -163,6 +182,7 @@ service globus-gridftp-server restart
 !!! warning
     Run the esgf-test-suite from esgf-monitoring and be sure that dl_gridftp returns no error.
 
+Use the procedure below to install certificates for esgf-node as well.
 
 #### ESGF nodes
 
