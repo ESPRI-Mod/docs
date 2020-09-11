@@ -70,6 +70,17 @@ tail /var/log/maillog
 ```
 You should see `status=sent` in the log file.
 
+The following machines are able to send you email:
+
+- hermes.ipsl.upmc.fr
+- hermes-test.ipsl.upmc.fr
+- hermes-mq-test.private.ipsl.fr
+- hermes-mq-prod.private.ipsl.fr
+- esgf-build.ipsl.umpc.fr
+- esgf-monitoring.ips.upmc.fr
+- esgf-node.ipsl.upmc.fr
+- vesg.ipsl.upmc.fr
+
 * Bashrc
 
 Add the following instructions in the /root/.bashrc so as to ease the administration:
