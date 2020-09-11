@@ -89,6 +89,8 @@ scripts/restart_hermes_mq_services.sh encapsulates these instructions and provid
 error handling mechanism (send an email if the script is not able to start up the 
 service). The script is executed from /etc/rc.local (specific to CentOS 6).
 
+involved machines: hermes-mq-test.private.ipsl.fr and hermes-mq-prod.private.ipsl.fr
+
 - On web machines, services are started following these instructions:
 
 ```bash
@@ -99,3 +101,5 @@ hermes-web-daemon-start
 scripts/restart_hermes_web_services.sh encapsulates these instructions and provides
 error handling mechanism (send an email if the script is not able to start up the 
 service). The script is executed from /etc/rc.local (specific to CentOS 6).
+
+involved machines: hermes.ipsl.upmc.fr and hermes-test.ipsl.upmc.fr

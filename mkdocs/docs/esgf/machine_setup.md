@@ -56,10 +56,30 @@ highlighted word in capital letters):
 ``` hl_lines="1"
 myhostname = FULL_QUALIFIED_NAME_OF_THE_HOST
 myorigin = $mydomain
-relayhost = zproxy.ipsl.fr
+relayhost = [smtp4web.ipsl.upmc.fr]
 inet_interfaces = loopback-only
 mydestination =
 ```
+
+Run these lines in order to test:
+
+```bash
+echo -e "You sucessfully received an email from ${HOSTNAME}" | mail -s "${HOSTNAME} email test" YOUR_EMAIL_ADDRESS
+sleep 0.5
+tail /var/log/maillog
+```
+You should see `status=sent` in the log file.
+
+The following machines are able to send you email:
+
+- hermes.ipsl.upmc.fr
+- hermes-test.ipsl.upmc.fr
+- hermes-mq-test.private.ipsl.fr
+- hermes-mq-prod.private.ipsl.fr
+- esgf-build.ipsl.umpc.fr
+- esgf-monitoring.ips.upmc.fr
+- esgf-node.ipsl.upmc.fr
+- vesg.ipsl.upmc.fr
 
 * Bashrc
 
