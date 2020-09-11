@@ -76,7 +76,7 @@ The MyProxy server checks that the user is authenticated correctly, and if it’
 
 Here is what each file does :
 
-- cacert.pem (on esgf-node and gridftp) is the Certificate Authority. It’s used to authenticate users.
+- cacert.pem (on esgf-node and gridftp) is the Certificate Authority. It’s used to generate certificates that users will use to download through GridFTP.
 - hostcert.pem (on esgf-node) is the Host certificate on the ESGF node. It’s used to validate the ESGF node and it’s signed by ESGF certificate authorities.
 - hostcert.pem (on gridftp) is the Host certficate for gridftp. It’s used to validate the gridftp downloads, when a user requests it.
 - cachain.pem (on gridftp and esgf-node) is the certificate chain, which lets us validate the gridftp and esgf-node machines. This is a certificate that isn’t specific to our machine, so we don’t need to request it.
@@ -179,6 +179,33 @@ Then restart GridFTP :
 service globus-gridftp-server restart
 ```
 
+Once the certificate is installed, here is how you can test it :
+
+* From ESGF-Monitoring (by hand) :
+
+```
+singularity shell /home/esgf-watch-dog/esgf-test-suite/esgf-test-suite/esgf-test-suite_env.singularity.img
+export X509_USER_PROXY='/home/esgf-watch-dog/.globus/certificate-file'
+export X509_CERT_DIR='/home/esgf-watch-dog/.globus/certificates'
+rm -rf /home/esgf-watch-dog/.globus/*
+myproxy-logon -T -s esgf-node.ipsl.upmc.fr -p 7512 -l plogerais -o ~/.globus/certificate-file -S -b
+```
+Enter your password for your CoG account here
+```
+globus-url-copy -b gsiftp://gridftp.ipsl.upmc.fr:2811//cmip6/AerChemMIP/IPSL/IPSL-CM6A-LR-INCA/piClim-2xdust/r1i1p1f1/AERmonZ/o3/grz/v20200717/o3_AERmonZ_IPSL-CM6A-LR-INCA_piClim-2xdust_r1i1p1f1_grz_185001-187912.nc ./test.nc
+```
+
+If the globus download succeeds, then the GridFTP service works properly.
+
+* From Synda (automatic) :
+
+```
+synda certificate renew
+synda get gsiftp://gridftp.ipsl.upmc.fr:2811//cmip6/DCPP/IPSL/IPSL-CM6A-LR/dcppC-amv-ExTrop-pos/r13i1p1f1/Emon/intvaw/gr/v20190110/intvaw_Emon_IPSL-CM6A-LR_dcppC-amv-ExTrop-pos_r13i1p1f1_gr_185001-185912.nc
+```
+
+If these commands succeed, the GridFTP service works properly.
+
 !!! warning
     Run the esgf-test-suite from esgf-monitoring and be sure that dl_gridftp returns no error.
 
@@ -194,6 +221,8 @@ When the certificates are expiring, after requesting a signature from the ESGF a
 * globus_simple_ca[…].tgz
 
 The name of the globus_simple_ca archive can vary. In our example it was `globus_simple_ca_85bc937c_setup-0.tar.gz`.
+
+The simple_ca archive needs to be decompressed as well. It contains a directory with 2 files : the signing policy and a certificate from an ESGF signing authority.
 
 These files need to copied *on the node*. We will launch a playbook on esgf-monitoring, but the playbook itself doesn’t make any remote copy : it copies from the node to other places on the node, then launches a few programs.
 
