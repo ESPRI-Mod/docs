@@ -41,6 +41,8 @@ nav:
     - Usage of birdy to fetch datasests: wps-copernicus/fetch_models.md
     - Docker: wps-copernicus/docker.md
     - Maintenance: wps-copernicus/maintenance.md
+  - CMOR:
+    - CMOR: cmor/cmor.md
   - SYNDA:
       - Synda: synda/synda.md
 
