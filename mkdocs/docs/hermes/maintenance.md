@@ -25,7 +25,7 @@ These are the machines that correspond :
 * hermes-mq-test.private.ipsl.fr : mq-test
 * hermes-db-test.private.ipsl.fr : db-test
 
-### Rebooting
+### Restarting Hermes
 
 * Stop the MQ daemons
 
@@ -80,7 +80,7 @@ You then can vacuum the inboxes AMPQ-PROD-REJECTED and AMPQ-PROD-PROCESSED.
 
 Then, move the emails in the inbox AMPQ-PROD to AMPQ-TEMP.
 
-* Start the MQ daemon back
+* Restart the MQ daemon
 
 Connect to hermes-mq-prod, then run :
 
@@ -88,11 +88,10 @@ Connect to hermes-mq-prod, then run :
 hermes-mq-daemons-start
 ```
 
-Then, move back the emails in the inbox AMPQ-TEMP from AMQP-PROD
+Then, move back the emails in the inbox AMPQ-TEMP from AMPQ-PROD
 
 Then, move the emails in the inbox AMPQ-PROD to AMPQ-TEMP.
 
-* Start the MQ daemon back
 
 Connect to hermes-mq-prod, then run :
 
@@ -100,4 +99,4 @@ Connect to hermes-mq-prod, then run :
 hermes-mq-daemons-start
 ```
 
-Then, move back the emails in the inbox AMPQ-TEMP from AMQP-PROD.
+Then, move back the emails in the inbox AMPQ-TEMP from AMPQ-PROD.

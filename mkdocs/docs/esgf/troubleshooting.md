@@ -1,5 +1,5 @@
 
-MIGRATION TROUBLESHOOTING
+TROUBLESHOOTING
 ============================
 
 * Version: 0.0.5
@@ -9,7 +9,7 @@ MIGRATION TROUBLESHOOTING
 
 ## Description
 
-This procedure describes common issues related to migrating an ESGF node, and how to fix them.
+This procedure describes common issues related to migrating or running an ESGF node, and how to fix them.
 
 ## Migrating from ESGF 2.7 to ESGF 4 on CentOS 6
 
@@ -112,3 +112,51 @@ killall python3```
 The killed test-suite instances will still send an empty error e-mail, but it’s nothing to worry about.
 
 Rerun the test-suite afterwards to be sure that everything is fine.
+
+
+### PostgreSQL and semaphores
+
+Sometimes, PostgreSQL will not be able to restart because there are too many semaphores. The command `systemctl status postgresql.service` will show the following :
+
+```vesg.ipsl.upmc.fr pg_ctl[3027]: HINT: This error does *not* mean that you have run out of disk space. It occurs when either the system limit for the maximum number of semaphore sets (SEMMNI), or the system wide maximum number of semaphores (SEMMNS)```
+
+In that case, rebooting is a way to fix this issue.
+
+### ESGF-Test-suite’s cog login error
+
+One error can happen, where the test-suite returns such error message :
+
+```
+> checking with /home/esgf-watch-dog/test-suite_config_files/my_config_prod.ini -a !compute,!cog_create_user
+cog_root_login ... ok
+cog_user_login ... ok
+basic_ping (https://vesg.ipsl.upmc.fr/thredds/catalog/catalog.html) ... ok
+basic_ping (https://vesg.ipsl.upmc.fr/esg-orp/home.htm) ... ok
+ERROR
+dl_http ... ok
+basic_ping (https://esgf-node.ipsl.upmc.fr/esgf-idp) ... ok
+basic_ping (https://esgf-node.ipsl.upmc.fr/) ... ok
+basic_ping (https://esgf-node.ipsl.upmc.fr/solr/#) ... ok
+basic_ping (https://esgf-node.ipsl.upmc.fr/esg-search/search) ... ok
+basic_ping (https://esgf-node.ipsl.upmc.fr/esg-orp/home.htm) ... ok
+myproxy_get_credentials ... SKIP: unable to check the credentials
+myproxy_get_trustroots ... SKIP: unable to check the trustroots
+slcs_django_admin_login ... ok
+basic_ping (https://vesg.ipsl.upmc.fr/esgf-stats-api/cmip5/stats-by-space/xml) ... ok
+basic_ping (https://vesg.ipsl.upmc.fr/esgf-stats-api/cmip5/stats-by-dataset/xml) ... ok
+basic_ping (https://vesg.ipsl.upmc.fr/esgf-stats-api/cmip5/stats-by-experiment/xml) ... ok
+basic_ping (https://vesg.ipsl.upmc.fr/esgf-stats-api/cmip5/stats-by-model/xml) ... ok
+basic_ping (https://vesg.ipsl.upmc.fr/esgf-stats-api/cmip5/stats-by-variable/xml) ... ok
+basic_ping (https://vesg.ipsl.upmc.fr/esgf-stats-api/obs4mips/stats-by-space/xml) ... ok
+basic_ping (https://vesg.ipsl.upmc.fr/esgf-stats-api/obs4mips/stats-by-dataset/xml) ... ok
+basic_ping (https://vesg.ipsl.upmc.fr/esgf-stats-api/obs4mips/stats-by-realm/xml) ... ok
+basic_ping (https://vesg.ipsl.upmc.fr/esgf-stats-api/obs4mips/stats-by-source/xml) ... ok
+basic_ping (https://vesg.ipsl.upmc.fr/esgf-stats-api/obs4mips/stats-by-variable/xml) ... ok
+basic_ping (https://vesg.ipsl.upmc.fr/esgf-stats-api/cross-project/stats-by-time/xml) ... ok
+
+======================================================================
+url downloaded: http://vesg.ipsl.upmc.fr/thredds/fileServer/cmip6/DCPP/IPSL/IPSL-CM6A-LR/dcppC-amv-Trop-neg/r9i1p1f1/Amon/tauu/gr/v20190110/tauu_Amon_IPSL-CM6A-LR_dcppC-amv-Trop-neg_r9i1p1f1_gr_185001-185912.nc
+IndexError: list index out of range```
+
+
+This is due to an error with the login in CoG. Check that you have the correct login by logging into https://esgf-node.ipsl.upmc.fr/. 
