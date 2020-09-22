@@ -154,9 +154,9 @@ basic_ping (https://vesg.ipsl.upmc.fr/esgf-stats-api/obs4mips/stats-by-source/xm
 basic_ping (https://vesg.ipsl.upmc.fr/esgf-stats-api/obs4mips/stats-by-variable/xml) ... ok
 basic_ping (https://vesg.ipsl.upmc.fr/esgf-stats-api/cross-project/stats-by-time/xml) ... ok
 
-======================================================================
 url downloaded: http://vesg.ipsl.upmc.fr/thredds/fileServer/cmip6/DCPP/IPSL/IPSL-CM6A-LR/dcppC-amv-Trop-neg/r9i1p1f1/Amon/tauu/gr/v20190110/tauu_Amon_IPSL-CM6A-LR_dcppC-amv-Trop-neg_r9i1p1f1_gr_185001-185912.nc
-IndexError: list index out of range```
+IndexError: list index out of range
+```
 
 
 This is due to an error with the login in CoG. Check that you have the correct login by logging into https://esgf-node.ipsl.upmc.fr/. 
