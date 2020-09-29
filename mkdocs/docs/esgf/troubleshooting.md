@@ -3,7 +3,7 @@ TROUBLESHOOTING
 ============================
 
 * Version: 0.0.5
-* Date: 03/09/2019
+* Date: 29/09/2020
 * Authors: Pierre Logerais
 * Keywords: migration centos esgf index data node
 
@@ -160,3 +160,9 @@ IndexError: list index out of range
 
 
 This is due to an error with the login in CoG. Check that you have the correct login by logging into https://esgf-node.ipsl.upmc.fr/. 
+
+### Bloated semaphores causing Postgres/httpd to be unable to start
+
+In some cases, you will encounter an issue where either the postgres or the httpd daemon on vesg can’t restart, with a message saying something like `no space left on device`. In these cases, run a command like this to clean up the semaphores :
+
+```for whatever in `ipcs -s | awk '{print $2}'`; do ipcrm -s $whatever; done```

@@ -88,8 +88,6 @@ Connect to hermes-mq-prod, then run :
 hermes-mq-daemons-start
 ```
 
-Then, move back the emails in the inbox AMPQ-TEMP from AMPQ-PROD
-
 Then, move the emails in the inbox AMPQ-PROD to AMPQ-TEMP.
 
 
@@ -98,5 +96,3 @@ Connect to hermes-mq-prod, then run :
 ```bash
 hermes-mq-daemons-start
 ```
-
-Then, move back the emails in the inbox AMPQ-TEMP from AMPQ-PROD.
