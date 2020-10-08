@@ -65,6 +65,14 @@ hermes-db-pgres-backup
 
 The database backup can be found at `/opt/hermes/ops/backups/db`
 
+* Purge the debug queues
+
+Connect to hermes-mq-prod, then run the following :
+
+```bash
+hermes-mq-purge-debug-queues
+```
+
 * Restart the web daemon
 
 Connect to hermes (web-prod) and run :
@@ -90,9 +98,12 @@ hermes-mq-daemons-start
 
 Then, move the emails in the inbox AMPQ-PROD to AMPQ-TEMP.
 
+### Verificiation
 
-Connect to hermes-mq-prod, then run :
+To check if everything is running, you can connect to the rabbitmq instance at : http://172.20.179.81:15672/#/
 
-```bash
-hermes-mq-daemons-start
-```
+You can check that the debug queues have a few messages (they should not have a lot, since you have reset the debug queues).
+
+It’s also a good idea to connect to the hermes page at : https://hermes.ipsl.upmc.fr/static/index.html
+
+Check that the header message is changing, as that means that there are jobs processed and everything works nicely.
