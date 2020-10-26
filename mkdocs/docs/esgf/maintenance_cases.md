@@ -113,3 +113,31 @@ esgf dev start
 If RAM is almost fully used (like 90% or more) on the index node, it means that there are a lot of requests. It’s not necessarily bad, but you should always check that the `/prodigfs` filesystem is mounted and responding, by accessing subdirectories in `/prodigfs`. If it’s available, then you should wait and see, and if the problem doesn’t subside by itself, restart the node during the evening or the night.
 
 If the data node is overcharged, it means that there are lots of downloads. If the load average is very high, it means that there are lots of pending downloads and it could be an issue with the mounted filesystems on `/prodigfs`. Again, you should check it by accessing subdirectories in `/prodigfs`. If the mounted filesystems are responding just fine, keep an eye out and restart only during the evening or the night.
+
+
+### Too many close_wait connections
+
+For one reason or another, the esgf nodes have an issue where there are CLOSE_WAIT connections piling up, and they show as between java and tomcat in netstat :
+
+```netstat -puWtn | grep CLOSE_WAIT
+[…]
+tcp6       1      0 ::1:8223                ::1:47630               CLOSE_WAIT  2958/java 
+[…]
+```
+
+This occurs on the data node only, and we have yet to find the root cause. This issue also combines with a very high load, but low CPU and RAM usage (load average can be as high as 200).
+
+There is a root cron job that is supposed to restart httpd after more than 200 close_wait connections :
+
+```
+# Kill close_waits
+5 * * * * /root/kill-close-wait-connections/restart_httpd.sh | /usr/bin/logger -t '[Kill_close_wait]'
+```
+
+This script simply checks how many close_waits are there, and if there are more than 200, he restarts `httpd`.
+
+If you have issues with this script, do the following :
+
+* check /var/log/messages, as the standard output is redirected there for this script.
+* Run the script manually.
+* If that succeeded, check the test-suite and thredds. If the thredds page is still not available, you should restart the ESGF node.
