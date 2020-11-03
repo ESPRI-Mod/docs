@@ -143,7 +143,8 @@ The passwords are as follows :
 
 ```
 esgf-publisher : LDfj5784T4VeKTxwhpqk8UmSqbC9DkTW
-esgf-downstream : qfwSeEjrPTZdfqbFLv7VqgSXzbnXD6Qr```
+esgf-downstream : qfwSeEjrPTZdfqbFLv7VqgSXzbnXD6Qr
+```
 
 
 Then set the permissions :
