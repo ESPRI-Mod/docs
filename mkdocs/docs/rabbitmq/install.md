@@ -28,7 +28,8 @@ Log in to the host as root.
 
 Execute the following :
 
-```yum update
+```
+yum update
 yum install epel-release socat wget vim git openssl zlib bzip2
 ```
 
@@ -36,7 +37,8 @@ yum install epel-release socat wget vim git openssl zlib bzip2
 
 We need a specific version of Erlang, so execute the following :
 
-```declare ERL_VER="22.2.4"
+```
+declare ERL_VER="22.2.4"
 wget https://github.com/rabbitmq/erlang-rpm/releases/download/v${ERL_VER}/erlang-${ERL_VER}-1.el7.x86_64.rpm
 yum localinstall erlang-${ERL_VER}-1.el7.x86_64.rpm
 ```
@@ -51,7 +53,8 @@ If it’s installed, you can remove the RPM :
 
 Add the repo and installed :
 
-```rpm --import https://www.rabbitmq.com/rabbitmq-signing-key-public.asc
+```
+rpm --import https://www.rabbitmq.com/rabbitmq-signing-key-public.asc
 rpm -Uvh https://github.com/rabbitmq/rabbitmq-server/releases/download/v3.8.2/rabbitmq-server-3.8.2-1.el7.noarch.rpm
 yum -q -y update
 yum -q -y install rabbitmq-server-3.8.2-1.el7.noarch.rpm```
@@ -71,7 +74,8 @@ systemctl enable rabbitmq-server.service
 
 Then configure and make RabbitMQ usable :
 
-```chown -R rabbitmq:rabbitmq /var/lib/rabbitmq
+```
+chown -R rabbitmq:rabbitmq /var/lib/rabbitmq
 declare NODE_ADMIN_USER=node-admin
 declare NODE_ADMIN_PWD=74p9ttcj7muEV4m6BVk69yqxe8PKCenH
 rabbitmqctl add_user $NODE_ADMIN_USER $NODE_ADMIN_PWD
@@ -80,7 +84,8 @@ rabbitmqctl set_permissions -p / $NODE_ADMIN_USER ".*" ".*" ".*"
 ```
 
 Test that the RabbitMQ is running :
-```yum install elinks -y
+```
+yum install elinks -y
 elinks http://127.0.0.1:15672
 ```
 
@@ -89,7 +94,8 @@ If that is working, delete the user guest :
 
 Edit the file `/etc/rabbitmq/rabbitmq.conf` and add the following content to it :
 
-```listeners.ssl.default = 5671
+```
+listeners.ssl.default = 5671
 
 ssl_options.cacertfile = /etc/pki/tls/certs/DigiCertCA.crt
 ssl_options.certfile   = /etc/pki/tls/certs/esgf-pid-mq.ipsl.upmc.fr.crt
@@ -115,7 +121,8 @@ Enable the SSL plugin :
 
 Make sure the openssl service is running, and restart RabbitMQ :
 
-```systemctl restart openssl
+```
+systemctl restart openssl
 systemctl restart rabbitmq-server
 systemctl status rabbitmq-server
 ```
@@ -124,13 +131,15 @@ You also need to configure two additional users : `esgf-downstream` and `esgf-
 
 The passwords are as follows :
 
-```esgf-publisher : LDfj5784T4VeKTxwhpqk8UmSqbC9DkTW
+```
+esgf-publisher : LDfj5784T4VeKTxwhpqk8UmSqbC9DkTW
 esgf-downstream : qfwSeEjrPTZdfqbFLv7VqgSXzbnXD6Qr```
 
 
 Then set the permissions :
 
-```rabbitmqctl set_permissions -p esgf-pid esgf-downstream ".*" ".*" ".*"
+```
+rabbitmqctl set_permissions -p esgf-pid esgf-downstream ".*" ".*" ".*"
 rabbitmqctl set_permissions -p esgf-pid esgf-publisher "" ".*" ""
 rabbitmqctl set_parameter federation-upstream-set esgffed-upstream-set '[{"upstream":"esgf-pid"},{"upstream":"esgf-pid"}]'
 ```
