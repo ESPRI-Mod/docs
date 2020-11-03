@@ -47,7 +47,9 @@ Check that erlang is installed with the command `erl`. Type `x` to test it out,
 
 If it’s installed, you can remove the RPM :
 
-```rm erlang-${ERL_VER}-1.el7.x86_64.rpm```
+```
+rm erlang-${ERL_VER}-1.el7.x86_64.rpm
+```
 
 ### Install RabbitMQ
 
@@ -57,7 +59,8 @@ Add the repo and installed :
 rpm --import https://www.rabbitmq.com/rabbitmq-signing-key-public.asc
 rpm -Uvh https://github.com/rabbitmq/rabbitmq-server/releases/download/v3.8.2/rabbitmq-server-3.8.2-1.el7.noarch.rpm
 yum -q -y update
-yum -q -y install rabbitmq-server-3.8.2-1.el7.noarch.rpm```
+yum -q -y install rabbitmq-server-3.8.2-1.el7.noarch.rpm
+```
 
 ### Configure RabbitMQ
 
@@ -94,7 +97,8 @@ elinks http://127.0.0.1:15672
 If that is working, delete the user guest :
 
 ```
-rabbitmqctl delete_user guest```
+rabbitmqctl delete_user guest
+```
 
 Edit the file `/etc/rabbitmq/rabbitmq.conf` and add the following content to it :
 
@@ -121,7 +125,9 @@ ln -s <path to your key> /etc/pki/tls/private/esgf-pid-mq.ipsl.upmc.fr.key
 
 Enable the SSL plugin :
 
-```rabbitmq-plugins enable rabbitmq_auth_mechanism_ssl```
+```
+rabbitmq-plugins enable rabbitmq_auth_mechanism_ssl
+```
 
 Make sure the openssl service is running, and restart RabbitMQ :
 
