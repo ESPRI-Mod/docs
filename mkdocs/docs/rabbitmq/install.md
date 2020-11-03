@@ -63,7 +63,9 @@ yum -q -y install rabbitmq-server-3.8.2-1.el7.noarch.rpm```
 
 Enable the plugin we need :
 
-```rabbitmq-plugins enable rabbitmq_management```
+```
+rabbitmq-plugins enable rabbitmq_management
+```
 
 Enable the rabbitMQ service :
 
