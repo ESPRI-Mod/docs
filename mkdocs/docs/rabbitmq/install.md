@@ -90,7 +90,9 @@ elinks http://127.0.0.1:15672
 ```
 
 If that is working, delete the user guest :
-```rabbitmqctl delete_user guest```
+
+```
+rabbitmqctl delete_user guest```
 
 Edit the file `/etc/rabbitmq/rabbitmq.conf` and add the following content to it :
 
