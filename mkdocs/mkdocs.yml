@@ -45,6 +45,8 @@ nav:
     - CMOR: cmor/cmor.md
   - SYNDA:
       - Synda: synda/synda.md
+  - RabbitMQ:
+      - Installation: rabbitmq/install.md
 
 theme: 
   name: material 
